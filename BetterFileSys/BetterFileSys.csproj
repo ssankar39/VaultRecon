@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>BetterFileSys</AssemblyName>
+    <RootNamespace>BetterFileSys</RootNamespace>
+    <Version>1.0.0</Version>
+    <Description>Advanced file system manager with semantic search and Everything SDK integration</Description>
+    <Authors>Better FileSys Team</Authors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- MVVM & UI -->
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    
+    <!-- File System & I/O -->
+    <PackageReference Include="System.IO.Abstractions" Version="20.0.4" />
+    
+    <!-- Semantic Search & Embeddings -->
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.4.0" />
+    
+    <!-- Everything SDK Integration -->
+    <PackageReference Include="EverythingNet" Version="1.0.75" />
+    
+    <!-- File Watching -->
+    <PackageReference Include="Jot" Version="2.1.17" />
+    
+    <!-- Database -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
+    
+    <!-- ONNX Runtime for embeddings (all-MiniLM-L6-v2) -->
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.17.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,57 @@
+# Build results
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+[Bb]uild/
+*.dll
+*.exe
+*.pdb
+
+# Visual Studio
+.vs/
+.vscode/
+*.sln.iml
+*.user
+*.userosscache
+*.sln.docstates
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+
+# IDE specific
+*.suo
+*.sln.iml
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.log
+*.tmp
+*.temp
+temp/
+
+# Debug logs
+BetterFileSys_Debug.log
+*.log
+
+# Local environment
+.env
+.env.local
+appsettings.local.json
+
+# Rider
+.idea/
+*.sln.iml
+
+# Mac
+.DS_Store
+*.swp
+*~.nib
