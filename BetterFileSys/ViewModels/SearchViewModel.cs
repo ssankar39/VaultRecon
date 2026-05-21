@@ -11,6 +11,7 @@ namespace BetterFileSys.ViewModels
 {
     /// <summary>
     /// ViewModel for search operations and results
+    /// M1: Keyword-based search using Everything service
     /// </summary>
     public partial class SearchViewModel : ObservableObject
     {
@@ -56,7 +57,7 @@ namespace BetterFileSys.ViewModels
 
             try
             {
-                // Treat empty query as "show all files"
+                // Treat empty query as search in key system paths
                 string query = string.IsNullOrWhiteSpace(SearchQuery) ? "*" : SearchQuery;
                 Log($"[SEARCH] Searching for: {query}");
                 var results = await _everythingService.SearchByKeywordAsync(query, maxResults: 50);

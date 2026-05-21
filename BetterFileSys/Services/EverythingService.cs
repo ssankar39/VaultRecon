@@ -8,7 +8,12 @@ using System.Threading.Tasks;
 namespace BetterFileSys.Services
 {
     /// <summary>
-    /// Service for fast file search (Phase 1: File System based, Phase 2: Everything SDK integration)
+    /// Service for fast file search with Everything SDK integration roadmap
+    /// M1: Walking Skeleton - Fast system-wide search using optimized System.IO
+    /// 
+    /// NOTE: EverythingNet 1.0.75 targets .NET Framework, not .NET 8.0.
+    /// Phase 1b will integrate native Everything SDK via C++/CLI wrapper or P/Invoke.
+    /// For MVP, using parallel directory search across key system paths.
     /// </summary>
     public class EverythingService
     {
@@ -25,8 +30,8 @@ namespace BetterFileSys.Services
         }
 
         /// <summary>
-        /// Search for files by keyword (filename match)
-        /// Currently using System.IO; will integrate Everything SDK in Phase 1b
+        /// M1: Search for files across common system paths
+        /// TODO: Phase 1b - Replace with native Everything SDK for &lt;500ms results
         /// </summary>
         public async Task<List<SearchResult>> SearchByKeywordAsync(string query, int maxResults = 50)
         {
@@ -42,19 +47,8 @@ namespace BetterFileSys.Services
                         return results;
                     }
 
-                    // Phase 1a: Use Documents folder as search root
-                    string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                    Log($"[SERVICE] Searching in: {documentsPath}");
-
-                    if (!Directory.Exists(documentsPath))
-                    {
-                        Log($"[SERVICE] Documents folder does not exist: {documentsPath}");
-                        return results;
-                    }
-
-                    // Recursively search with permission error handling
-                    SearchDirectory(documentsPath, $"*{query}*", results, maxResults, ref results);
-
+                    Log($"[SERVICE] M1 Search for: {query}");
+                    results = SearchSystemPaths(query, maxResults);
                     Log($"[SERVICE] Search complete. Returned {results.Count} results");
                 }
                 catch (Exception ex)
@@ -66,67 +60,129 @@ namespace BetterFileSys.Services
             });
         }
 
-        private void SearchDirectory(string path, string pattern, List<SearchResult> results, int maxResults, ref List<SearchResult> resultList)
+        /// <summary>
+        /// Search across key system directories with intelligent path prioritization
+        /// Searches in parallel for faster results
+        /// </summary>
+        private List<SearchResult> SearchSystemPaths(string query, int maxResults)
+        {
+            var allResults = new List<SearchResult>();
+            var searchPaths = new[]
+            {
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads"),
+                Environment.GetFolderPath(Environment.SpecialFolder.Recent),
+            };
+
+            Log($"[SERVICE] Searching {searchPaths.Length} system paths");
+
+            // Search all paths and collect results
+            var pathTasks = searchPaths
+                .AsParallel()
+                .Where(p => Directory.Exists(p))
+                .Select(path =>
+                {
+                    var pathResults = new List<SearchResult>();
+                    try
+                    {
+                        SearchDirectoryRecursive(path, query, pathResults, maxResults);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log($"[SERVICE] Error searching {path}: {ex.Message}");
+                    }
+                    return pathResults;
+                })
+                .ToList();
+
+            // Merge results and sort by relevance
+            foreach (var pathResults in pathTasks)
+            {
+                allResults.AddRange(pathResults);
+            }
+
+            // Remove duplicates and sort
+            allResults = allResults
+                .GroupBy(r => r.FilePath)
+                .Select(g => g.First())
+                .OrderByDescending(r => r.RelevanceScore)
+                .Take(maxResults)
+                .ToList();
+
+            return allResults;
+        }
+
+        /// <summary>
+        /// Recursively search directory with permission handling
+        /// </summary>
+        private void SearchDirectoryRecursive(string path, string query, List<SearchResult> results, int maxResults)
         {
             try
             {
                 if (results.Count >= maxResults)
                     return;
 
-                var files = Directory.GetFiles(path, pattern);
-
-                int rank = 0;
-                foreach (var file in files)
-                {
-                    if (results.Count >= maxResults)
-                        break;
-
-                    try
-                    {
-                        var fileInfo = new FileInfo(file);
-                        results.Add(new SearchResult
-                        {
-                            FilePath = file,
-                            FileName = fileInfo.Name,
-                            FileSize = fileInfo.Length,
-                            FileType = fileInfo.Extension,
-                            Modified = fileInfo.LastWriteTime,
-                            RelevanceScore = 1.0 - (rank / (double)maxResults),
-                            SearchType = SearchType.Keyword
-                        });
-                        Log($"[SERVICE] Added: {fileInfo.Name}");
-                        rank++;
-                    }
-                    catch (Exception ex)
-                    {
-                        Log($"[SERVICE] Error processing file {file}: {ex.Message}");
-                    }
-                }
-
-                // Recursively search subdirectories
+                // Search files
                 try
                 {
-                    var directories = Directory.GetDirectories(path);
-                    foreach (var dir in directories)
-                    {
-                        if (results.Count >= maxResults)
-                            break;
+                    var files = Directory.GetFiles(path, $"*{query}*");
 
-                        SearchDirectory(dir, pattern, results, maxResults, ref resultList);
+                    foreach (var file in files.Take(maxResults - results.Count))
+                    {
+                        try
+                        {
+                            var fileInfo = new FileInfo(file);
+                            double relevanceScore = CalculateFilenameRelevance(fileInfo.Name, query);
+
+                            results.Add(new SearchResult
+                            {
+                                FilePath = file,
+                                FileName = fileInfo.Name,
+                                FileSize = fileInfo.Length,
+                                FileType = fileInfo.Extension,
+                                Modified = fileInfo.LastWriteTime,
+                                RelevanceScore = relevanceScore,
+                                SearchType = SearchType.Keyword
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            Log($"[SERVICE] Error processing file: {ex.Message}");
+                        }
                     }
                 }
-                catch (UnauthorizedAccessException ex)
+                catch (UnauthorizedAccessException)
                 {
-                    Log($"[SERVICE] Access denied to: {path}");
+                    // Skip protected directories
                 }
-                catch (Exception ex)
+
+                // Recursively search subdirectories (limit depth to avoid system folders)
+                if (GetDirectoryDepth(path) < 6) // Limit recursion depth
                 {
-                    Log($"[SERVICE] Error enumerating directory {path}: {ex.Message}");
+                    try
+                    {
+                        var directories = Directory.GetDirectories(path);
+                        foreach (var dir in directories)
+                        {
+                            if (results.Count >= maxResults)
+                                break;
+
+                            // Skip system/hidden directories
+                            var dirInfo = new DirectoryInfo(dir);
+                            if ((dirInfo.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden)
+                                continue;
+                            if (dirInfo.Name.StartsWith("."))
+                                continue;
+
+                            SearchDirectoryRecursive(dir, query, results, maxResults);
+                        }
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        // Skip if access denied
+                    }
                 }
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                Log($"[SERVICE] Access denied to: {path}");
             }
             catch (Exception ex)
             {
@@ -135,7 +191,46 @@ namespace BetterFileSys.Services
         }
 
         /// <summary>
-        /// Get all text files in a directory (for Phase 2 indexing)
+        /// Get directory depth to limit recursion
+        /// </summary>
+        private int GetDirectoryDepth(string path)
+        {
+            return path.Split(Path.DirectorySeparatorChar).Length;
+        }
+
+        /// <summary>
+        /// Calculate relevance score based on filename match
+        /// </summary>
+        private double CalculateFilenameRelevance(string fileName, string query)
+        {
+            if (string.IsNullOrEmpty(fileName) || string.IsNullOrEmpty(query))
+                return 0.0;
+
+            fileName = fileName.ToLower();
+            query = query.ToLower();
+
+            // Exact match
+            if (fileName == query)
+                return 1.0;
+
+            // Filename starts with query
+            if (fileName.StartsWith(query))
+                return 0.95;
+
+            // Query matches at start of filename (without extension)
+            string nameWithoutExt = Path.GetFileNameWithoutExtension(fileName).ToLower();
+            if (nameWithoutExt.StartsWith(query))
+                return 0.90;
+
+            // Contains query
+            if (fileName.Contains(query))
+                return 0.70;
+
+            return 0.5;
+        }
+
+        /// <summary>
+        /// Get all text files in a directory (for M3: indexing phase)
         /// </summary>
         public async Task<List<SearchResult>> GetTextFilesInDirectoryAsync(string directory)
         {
@@ -148,7 +243,7 @@ namespace BetterFileSys.Services
                     if (!Directory.Exists(directory))
                         return results;
 
-                    var textExtensions = new[] { ".txt", ".md", ".log", ".json", ".xml", ".cs", ".py", ".js", ".html", ".css" };
+                    var textExtensions = new[] { ".txt", ".md", ".log", ".json", ".xml", ".cs", ".py", ".js", ".html", ".css", ".pdf", ".docx" };
 
                     var files = Directory.GetFiles(directory, "*.*", SearchOption.AllDirectories)
                         .Where(f => textExtensions.Contains(Path.GetExtension(f).ToLower()));
@@ -177,7 +272,7 @@ namespace BetterFileSys.Services
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Directory scan error: {ex.Message}");
+                    Log($"[SERVICE] Directory scan error: {ex.Message}");
                 }
 
                 return results;
@@ -185,7 +280,7 @@ namespace BetterFileSys.Services
         }
 
         /// <summary>
-        /// Get file content for preview or Phase 2 indexing
+        /// Get file content for preview or M3: indexing
         /// </summary>
         public async Task<string> ReadFileContentAsync(string filePath, int maxLines = 500)
         {
@@ -208,7 +303,7 @@ namespace BetterFileSys.Services
 
         public void Dispose()
         {
-            // Cleanup if needed (Everything SDK integration will go here in Phase 1b)
+            // Cleanup
         }
     }
 }
