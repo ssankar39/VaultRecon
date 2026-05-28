@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -24,14 +24,15 @@
     <!-- Semantic Search & Embeddings -->
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.4.0" />
     
-    <!-- Everything SDK Integration -->
-    <PackageReference Include="EverythingNet" Version="0.1.0-beta" />
-    
     <!-- File Watching -->
     <PackageReference Include="Jot" Version="2.1.17" />
     
     <!-- Database -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
+
+    <!-- Vector DB (LanceDB) -->
+    <PackageReference Include="LanceDB" Version="2.4.1" />
+    <PackageReference Include="Apache.Arrow" Version="22.1.0" />
     
     <!-- ONNX Runtime for embeddings (all-MiniLM-L6-v2) -->
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.17.0" />

@@ -61,7 +61,15 @@
         </DataGrid>
 
         <!-- Footer -->
-        <TextBlock Grid.Row="2" Text="Phase 1: Keyword Search (Everything SDK)" Margin="15,8" 
-                   FontSize="11" Foreground="#999999" Background="#FFFFFF"/>
+        <Grid Grid.Row="2" Background="#FFFFFF" Margin="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Phase 3: LanceDB Indexing" Margin="15,8"
+                       FontSize="11" Foreground="#999999"/>
+            <TextBlock Grid.Column="1" Text="{Binding IndexStatusMessage}" Margin="15,8"
+                       FontSize="11" Foreground="#666666"/>
+        </Grid>
     </Grid>
 </Window>

@@ -16,7 +16,7 @@ namespace BetterFileSys.Services
     public class EmbeddingService : IDisposable
     {
         private readonly string _logPath = Path.Combine(Path.GetTempPath(), "BetterFileSys_Debug.log");
-        private InferenceSession _session;
+        private InferenceSession? _session;
         private bool _isInitialized = false;
 
         private void Log(string message)
@@ -47,7 +47,7 @@ namespace BetterFileSys.Services
 
                     var sessionOptions = new SessionOptions();
                     sessionOptions.GraphOptimizationLevel = GraphOptimizationLevel.ORT_ENABLE_ALL;
-                    sessionOptions.IntraOpNumThreads = Environment.ProcessorCount;
+                    sessionOptions.IntraOpNumThreads = Math.Min(2, Environment.ProcessorCount);
 
                     // TODO: Phase 1b - Download model if not exists
                     // For now, detect if model exists, log status
@@ -78,10 +78,10 @@ namespace BetterFileSys.Services
         /// Generate embedding vector for text
         /// Returns 384-dimensional vector for all-MiniLM-L6-v2
         /// </summary>
-        public async Task<float[]> GetEmbeddingAsync(string text)
+        public async Task<float[]?> GetEmbeddingAsync(string text)
         {
             if (string.IsNullOrEmpty(text))
-                return new float[384]; // Zero vector
+            return Array.Empty<float>();
 
             return await Task.Run(() =>
             {
@@ -96,18 +96,25 @@ namespace BetterFileSys.Services
 
                     // Tokenize and prepare input
                     var tokens = Tokenize(text);
-                    var inputTensor = PrepareInputTensor(tokens);
+                    Log($"[EMBED] Generated {tokens.Length} tokens from text");
+                    var inputIds = PrepareInputTensor(tokens);
+                    var attentionMask = PrepareAttentionMask(tokens);
+                    var tokenTypeIds = PrepareTokenTypeIds(tokens);
 
-                    // Run inference
+                    // Run inference with all required inputs (INT64)
                     var inputs = new List<NamedOnnxValue>
                     {
-                        NamedOnnxValue.CreateFromTensor("input_ids", inputTensor)
+                        NamedOnnxValue.CreateFromTensor("input_ids", inputIds),
+                        NamedOnnxValue.CreateFromTensor("attention_mask", attentionMask),
+                        NamedOnnxValue.CreateFromTensor("token_type_ids", tokenTypeIds)
                     };
 
+                    Log($"[EMBED] Running inference...");
                     using (var results = _session.Run(inputs))
                     {
                         // Extract embedding from output
                         var embedding = results.FirstOrDefault()?.AsEnumerable<float>().ToArray();
+                        Log($"[EMBED] Inference successful, got embedding vector");
                         
                         if (embedding != null)
                         {
@@ -157,37 +164,76 @@ namespace BetterFileSys.Services
         }
 
         /// <summary>
-        /// Tokenize text (simple implementation)
-        /// TODO Phase 1b: Use proper tokenizer from model
+        /// Tokenize text to token IDs (character-level fallback)
+        /// TODO Phase 1b: Integrate proper BertTokenizer or sentence-piece tokenizer
         /// </summary>
         private int[] Tokenize(string text)
         {
-            // Simple whitespace tokenization - placeholder
-            // Real implementation would use model's tokenizer
-            var tokens = text.ToLower()
-                .Split(new[] { ' ', '\t', '\n', ',', '.', ';', ':', '!', '?' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(t => t.GetHashCode())
-                .ToArray();
-
-            return tokens;
+            // MVP: Use character + word tokens as simple tokenization
+            // Real implementation requires proper BERT WordPiece tokenizer
+            
+            var tokens = new List<int>();
+            text = text.ToLower();
+            
+            // Add [CLS] token (ID 101 in BERT vocab)
+            tokens.Add(101);
+            
+            // Simple word tokenization with stable token ID mapping
+            var words = text.Split(new[] { ' ', '\t', '\n', ',', '.', ';', ':', '!', '?' }, StringSplitOptions.RemoveEmptyEntries);
+            
+            foreach (var word in words)
+            {
+                // Map word to stable token ID in valid BERT vocab range (1000-11000)
+                int tokenId = Math.Abs(word.GetHashCode()) % 10000 + 1000;
+                tokens.Add(tokenId);
+            }
+            
+            // Add [SEP] token (ID 102)
+            tokens.Add(102);
+            
+            return tokens.ToArray();
         }
 
         /// <summary>
-        /// Prepare tensor for ONNX model input
+        /// Prepare input_ids tensor for ONNX model (Int64)
         /// </summary>
-        private DenseTensor<int> PrepareInputTensor(int[] tokenIds)
+        private DenseTensor<long> PrepareInputTensor(int[] tokenIds)
         {
-            // Pad or truncate to max sequence length (typically 384 for MiniLM)
-            const int maxSequenceLength = 384;
-            var paddedTokens = new int[maxSequenceLength];
+            const int maxSequenceLength = 512;
+            var paddedTokens = new long[maxSequenceLength];
 
             for (int i = 0; i < Math.Min(tokenIds.Length, maxSequenceLength); i++)
             {
                 paddedTokens[i] = tokenIds[i];
             }
 
-            var tensor = new DenseTensor<int>(paddedTokens, new[] { 1, maxSequenceLength });
-            return tensor;
+            return new DenseTensor<long>(paddedTokens, new[] { 1, maxSequenceLength });
+        }
+
+        /// <summary>
+        /// Prepare attention_mask tensor (1 for real tokens, 0 for padding) - Int64
+        /// </summary>
+        private DenseTensor<long> PrepareAttentionMask(int[] tokenIds)
+        {
+            const int maxSequenceLength = 512;
+            var mask = new long[maxSequenceLength];
+
+            for (int i = 0; i < Math.Min(tokenIds.Length, maxSequenceLength); i++)
+            {
+                mask[i] = 1;
+            }
+
+            return new DenseTensor<long>(mask, new[] { 1, maxSequenceLength });
+        }
+
+        /// <summary>
+        /// Prepare token_type_ids tensor (all 0s for single sequence) - Int64
+        /// </summary>
+        private DenseTensor<long> PrepareTokenTypeIds(int[] tokenIds)
+        {
+            const int maxSequenceLength = 512;
+            var typeIds = new long[maxSequenceLength];
+            return new DenseTensor<long>(typeIds, new[] { 1, maxSequenceLength });
         }
 
         /// <summary>
@@ -196,7 +242,7 @@ namespace BetterFileSys.Services
         private float[] NormalizeVector(float[] vector)
         {
             if (vector == null || vector.Length == 0)
-                return vector;
+                return Array.Empty<float>();
 
             double magnitude = Math.Sqrt(vector.Sum(v => v * v));
             
