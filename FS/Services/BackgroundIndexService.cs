@@ -121,6 +121,9 @@ namespace BetterFileSys.Services
 
                 foreach (var filePath in EnumerateFilesSafe(root))
                 {
+                    if (!_isRunning)
+                        return;
+
                     _pauseGate.Wait();
 
                     seenPaths.Add(filePath);
@@ -433,6 +436,12 @@ namespace BetterFileSys.Services
             _isRunning = false;
             _queueSignal.Set();
             _pauseGate.Set();
+
+            // Wait for background worker thread to terminate gracefully
+            if (_workerThread != null && _workerThread.IsAlive)
+            {
+                _workerThread.Join(TimeSpan.FromSeconds(3));
+            }
 
             foreach (var watcher in _watchers)
             {

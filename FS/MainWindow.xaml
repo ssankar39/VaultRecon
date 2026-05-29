@@ -56,6 +56,7 @@
                 <DataGridTextColumn Header="Type" Binding="{Binding FileType}" Width="80"/>
                 <DataGridTextColumn Header="Modified" Binding="{Binding Modified}" Width="160"/>
                 <DataGridTextColumn Header="Path" Binding="{Binding FilePath}" Width="300" MinWidth="200"/>
+                <DataGridTextColumn Header="Method" Binding="{Binding SearchType}" Width="100"/>
                 <DataGridTextColumn Header="Score" Binding="{Binding RelevanceScore}" Width="80"/>
             </DataGrid.Columns>
         </DataGrid>

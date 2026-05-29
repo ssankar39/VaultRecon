@@ -67,12 +67,15 @@ namespace BetterFileSys.ViewModels
         {
             try
             {
-                await _embeddingService.InitializeAsync();
+                StatusMessage = "Initializing AI system...";
+                await _embeddingService.InitializeAsync(progress => StatusMessage = progress);
+                StatusMessage = "AI system ready";
                 await _backgroundIndexService.StartAsync();
                 Log("[INIT] EmbeddingService initialized");
             }
             catch (Exception ex)
             {
+                StatusMessage = $"AI error: {ex.Message}";
                 Log($"[INIT] EmbeddingService error: {ex.Message}");
             }
         }
@@ -101,8 +104,12 @@ namespace BetterFileSys.ViewModels
 
                     if (queryEmbedding != null)
                     {
-                        enhancedResults = await _indexService.SearchByVectorAsync(queryEmbedding, limit: 50);
-                        Log($"[SEARCH] LanceDB search: {enhancedResults.Count} results");
+                        var vectorResults = await _indexService.SearchByVectorAsync(queryEmbedding, limit: 50);
+                        Log($"[SEARCH] LanceDB search raw: {vectorResults.Count} results");
+
+                        // Filter out results with low similarity (relevance score < 0.35 is noise)
+                        enhancedResults = vectorResults.Where(r => r.RelevanceScore >= 0.35).ToList();
+                        Log($"[SEARCH] LanceDB search filtered (score >= 0.35): {enhancedResults.Count} results");
                     }
                 }
 
@@ -112,10 +119,13 @@ namespace BetterFileSys.ViewModels
                     var keywordResults = await _everythingService.SearchByKeywordAsync(query, maxResults: 50);
                     Log($"[SEARCH] Keyword search: {keywordResults.Count} results");
 
-                    if (!IsIndexing && query != "*" && keywordResults.Count > 0)
+                    if (query != "*" && keywordResults.Count > 0)
                     {
-                        // M2: Semantic search - enhance top results only when indexer is idle
-                        enhancedResults = await EnhanceWithSemanticScoresAsync(keywordResults.Take(12).ToList(), query);
+                        // M2: Semantic search - enhance top results only (indexer is already paused during search)
+                        var topToEnhance = keywordResults.Take(12).ToList();
+                        var remaining = keywordResults.Skip(12).ToList();
+                        var enhanced = await EnhanceWithSemanticScoresAsync(topToEnhance, query);
+                        enhancedResults = enhanced.Concat(remaining).ToList();
                     }
                     else
                     {
@@ -170,19 +180,24 @@ namespace BetterFileSys.ViewModels
                 {
                     try
                     {
-                        // Read first 100 lines of file for semantic comparison
-                        string fileContent = await _everythingService.ReadFileContentAsync(result.FilePath, maxLines: 100);
-                        
-                        if (string.IsNullOrWhiteSpace(fileContent))
+                        string textToEmbed = "";
+
+                        if (IsSupportedTextFile(result.FilePath))
                         {
-                            // No content available, keep keyword score
-                            result.SearchType = SearchType.Keyword;
-                            enhancedResults.Add(result);
-                            continue;
+                            string fileContent = await _everythingService.ReadFileContentAsync(result.FilePath, maxLines: 100);
+                            if (!string.IsNullOrWhiteSpace(fileContent))
+                            {
+                                textToEmbed = fileContent;
+                            }
                         }
 
-                        // Get file content embedding
-                        var fileEmbedding = await _embeddingService.GetEmbeddingAsync(fileContent);
+                        if (string.IsNullOrWhiteSpace(textToEmbed))
+                        {
+                            textToEmbed = Path.GetFileNameWithoutExtension(result.FileName);
+                        }
+
+                        // Get embedding
+                        var fileEmbedding = await _embeddingService.GetEmbeddingAsync(textToEmbed);
                         
                         if (fileEmbedding != null)
                         {
@@ -232,9 +247,9 @@ namespace BetterFileSys.ViewModels
 
         public void Cleanup()
         {
-            _everythingService?.Dispose();
-            _embeddingService?.Dispose();
             _backgroundIndexService?.Dispose();
+            _embeddingService?.Dispose();
+            _everythingService?.Dispose();
         }
 
         private static string GetIndexPath()
@@ -251,6 +266,14 @@ namespace BetterFileSys.ViewModels
                 Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
             };
+        }
+
+        private static bool IsSupportedTextFile(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+                return false;
+            var extension = Path.GetExtension(filePath).ToLowerInvariant();
+            return extension is ".txt" or ".md" or ".log" or ".json" or ".xml" or ".cs" or ".py" or ".js" or ".html" or ".css";
         }
     }
 }
