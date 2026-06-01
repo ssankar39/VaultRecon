@@ -1,130 +1,71 @@
-# Better FileSys
+# Vault Recon
 
-A modern Windows 11 file system management desktop application built with C# and WPF.
+An advanced local search engine and multi-column file manager for Windows 11 built with C# and WPF, featuring hybrid semantic vector search, IBM Docling document parsing, and a high-fidelity glassmorphic dark user interface.
 
-## Overview
+---
 
-Better FileSys is an advanced file manager for Windows 11 designed to enhance the native file system experience with powerful features for efficient file management, organization, and navigation.
+## Core Features
 
-## Features
+* **Modern Dark UI**: Beautiful glassmorphic interface featuring a left sidebar with disk capacity indicators, Quick Access shortcuts, navigation history, and unified cool-gray hover visual feedback on all buttons.
+* **Miller Columns Explorer**: Browse nested folders side-by-side using horizontal columns. Displays folder size, relative age, and lets you open files natively by double-clicking.
+* **Windows 11-Style Context Menu**: Right-click context menu containing standard commands (Open, Administrator run, notepad editing) and a quick action bar (Cut, Copy, Rename, Share, Delete).
+* **Smart Hybrid Search**: Combines traditional file name matching with local AI vector search. You can search by meaning and include location terms (e.g., searching *"downloads tax"* specifically queries tax documents in the Downloads directory).
+* **Deep Document Ingestion**: Runs local parsing scripts to index the actual text content of PDFs, Word documents, and Excel sheets, making them semantically searchable.
+* **Efficient Background Indexing**: Watches for file modifications and indexes your PC in the background while automatically bypassing massive system and developer folders (`node_modules`, `.venv`, etc.) to remain fast and responsive.
+* **File Details & Preview Inspector**: Right side panel displaying colored file cards, metadata stats, and a dynamic 100-line live content preview box for source/text files.
 
-- **Intuitive Interface**: Clean, modern WPF-based user interface
-- **Fast Navigation**: Quick access to common folders and drives
-- **File Operations**: Bulk delete, create, move, and copy operations
-- **Search & Filter**: Advanced search capabilities with filters
-- **Drag & Drop**: Intuitive drag-and-drop file operations
-- **Recent Files**: Quick access to recently used files
-- **Metadata View**: Display and edit file properties
-- **Multi-tab Support**: Manage multiple folders simultaneously
+---
 
 ## Technology Stack
 
-- **Framework**: .NET 6.0+
-- **UI**: WPF (Windows Presentation Foundation)
-- **Language**: C# 10+
-- **Dependencies**:
-  - CommunityToolkit.Mvvm - MVVM implementation
-  - System.IO.Abstractions - File system abstraction
-  - Microsoft.Xaml.Behaviors.Wpf - XAML behaviors
+- **Target Framework**: .NET 8.0-windows
+- **UI Platform**: WPF (C# / XAML)
+- **Vector Database**: LanceDB (Embedded local database)
+- **Machine Learning**: Microsoft.ML.OnnxRuntime & `all-MiniLM-L6-v2.onnx` local sentence embeddings
+- **MVVM Library**: CommunityToolkit.Mvvm
+- **Document Parsing**: IBM Docling + MarkItDown (Python 3 environment execution wrapper)
+- **Keyword Search**: PLINQ Parallel Search (highly optimized)
+
+---
 
 ## Project Structure
 
+```text
+VaultRecon/
+├── FS/
+│   ├── Models/              # Data structures (FileItem.cs, SearchResult.cs)
+│   ├── ViewModels/          # SearchViewModel.cs, DirectoryColumnViewModel.cs
+│   ├── Services/            # BackgroundIndexService.cs, EverythingService.cs, EmbeddingService.cs
+│   ├── scripts/             # parse_document.py (IBM Docling text parser)
+│   ├── App.xaml             # App-wide color resources and base templates
+│   ├── MainWindow.xaml      # Core glassmorphic theme and multi-page UI definitions
+│   └── BetterFileSys.csproj # .NET 8.0 project file
+├── tasks/                   # AI persistence memory and checklist
+└── README.md                # Project documentation
 ```
-BetterFileSys/
-├── Models/              # Data models (FileItem, etc.)
-├── ViewModels/          # MVVM ViewModels
-├── Views/               # XAML Windows and UserControls
-├── Services/            # Business logic and file operations
-├── App.xaml             # Application root
-├── MainWindow.xaml      # Main window UI
-└── BetterFileSys.csproj # Project file
-```
+
+---
 
 ## Getting Started
 
 ### Prerequisites
-
-- .NET 6.0 SDK or later
+- .NET 8.0 SDK
 - Windows 10 or Windows 11
-- Visual Studio 2022 or Visual Studio Code
+- Python 3.10+ (for IBM Docling deep document ingestion)
 
-### Installation
+### Run the Application
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/username/better-filesys.git
-   cd "Better FileSys"
-   ```
-
-2. Restore dependencies:
+1. **Restore dependencies**:
    ```bash
    dotnet restore
    ```
 
-3. Build the project:
+2. **Build the project**:
    ```bash
    dotnet build
    ```
 
-4. Run the application:
+3. **Run the application**:
    ```bash
-   dotnet run
+   dotnet run --project FS/BetterFileSys.csproj
    ```
-
-## Development
-
-### Building
-
-```bash
-dotnet build
-```
-
-### Running in Debug Mode
-
-```bash
-dotnet run
-```
-
-### Publishing
-
-Create a standalone executable:
-
-```bash
-dotnet publish -c Release -r win-x64 --self-contained
-```
-
-## Architecture
-
-The application follows the **MVVM (Model-View-ViewModel)** pattern:
-
-- **Models**: Core data structures representing files and folders
-- **ViewModels**: Logic for handling UI interactions and file operations
-- **Views**: XAML UI definitions
-- **Services**: Business logic for file system operations
-
-## Future Enhancements
-
-- [ ] Cloud storage integration (OneDrive, Google Drive)
-- [ ] File synchronization
-- [ ] Advanced preview capabilities
-- [ ] Batch renaming tools
-- [ ] File compression/extraction
-- [ ] Theme customization
-- [ ] Multi-language support
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see LICENSE file for details.
-
-## Contact
-
-For questions or suggestions, please open an issue on GitHub.
-
----
-
-**Version**: 1.0.0  
-**Last Updated**: May 14, 2026

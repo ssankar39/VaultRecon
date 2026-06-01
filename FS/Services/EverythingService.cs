@@ -72,6 +72,7 @@ namespace BetterFileSys.Services
                 Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads"),
+                Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
                 Environment.GetFolderPath(Environment.SpecialFolder.Recent),
             };
 
@@ -201,7 +202,7 @@ namespace BetterFileSys.Services
         /// <summary>
         /// Calculate relevance score based on filename match
         /// </summary>
-        private double CalculateFilenameRelevance(string fileName, string query)
+        public double CalculateFilenameRelevance(string fileName, string query)
         {
             if (string.IsNullOrEmpty(fileName) || string.IsNullOrEmpty(query))
                 return 0.0;

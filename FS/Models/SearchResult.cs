@@ -17,6 +17,45 @@ namespace BetterFileSys.Models
 
         public string FormattedSize => FormatBytes(FileSize);
 
+        public string RelativeAge
+        {
+            get
+            {
+                var age = DateTime.UtcNow - Modified.ToUniversalTime();
+                if (age.TotalHours < 24)
+                    return $"{(int)Math.Max(1, age.TotalHours)} h";
+                if (age.TotalDays < 30)
+                    return $"{(int)Math.Max(1, age.TotalDays)} d";
+                if (age.TotalDays < 365)
+                    return $"{(int)Math.Max(1, age.TotalDays / 30)} M";
+                return $"{(int)Math.Max(1, age.TotalDays / 365)} y";
+            }
+        }
+
+        public string RelativeAgeColor
+        {
+            get
+            {
+                var age = DateTime.UtcNow - Modified.ToUniversalTime();
+                if (age.TotalHours < 24)
+                    return "#D97706"; // Amber/yellow
+                if (age.TotalDays < 30)
+                    return "#059669"; // Green
+                if (age.TotalDays < 365)
+                    return "#0891B2"; // Cyan/Teal
+                return "#4B5563"; // Grey
+            }
+        }
+
+        public string ExtensionTag
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(FileType)) return "file";
+                return FileType.TrimStart('.').ToLower();
+            }
+        }
+
         private static string FormatBytes(long bytes)
         {
             string[] sizes = { "B", "KB", "MB", "GB" };
@@ -38,3 +77,4 @@ namespace BetterFileSys.Models
         Hybrid
     }
 }
+

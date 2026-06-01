@@ -12,7 +12,7 @@ namespace BetterFileSys.Services
     public class BackgroundIndexService : IDisposable
     {
         private const int DebounceMilliseconds = 1000;
-        private const int BatchSize = 20;
+        private const int BatchSize = 1;
         private const int MaxDepth = 8;
         private const int StartupDelayMilliseconds = 1500;
         private const int BatchDelayMilliseconds = 120;
@@ -20,6 +20,7 @@ namespace BetterFileSys.Services
         private const int WorkChunkSize = 40;
         private const int WorkChunkDelayMilliseconds = 250;
         private const long MaxFileSizeBytes = 256 * 1024;
+        private const long MaxBinaryFileSizeBytes = 10 * 1024 * 1024; // 10 MB for documents and images
 
         private readonly LanceDbIndexService _indexService;
         private readonly EmbeddingService _embeddingService;
@@ -132,7 +133,9 @@ namespace BetterFileSys.Services
                         continue;
 
                     var info = new FileInfo(filePath);
-                    if (info.Length > MaxFileSizeBytes)
+                    bool isText = IsSupportedTextFile(filePath);
+                    long maxAllowedSize = isText ? MaxFileSizeBytes : MaxBinaryFileSizeBytes;
+                    if (info.Length > maxAllowedSize)
                         continue;
                     long modifiedTicks = info.LastWriteTimeUtc.ToFileTimeUtc();
 
@@ -215,7 +218,9 @@ namespace BetterFileSys.Services
                 return;
 
             var info = new FileInfo(filePath);
-            if (info.Length > MaxFileSizeBytes)
+            bool isText = IsSupportedTextFile(filePath);
+            long maxAllowedSize = isText ? MaxFileSizeBytes : MaxBinaryFileSizeBytes;
+            if (info.Length > maxAllowedSize)
                 return;
             long modifiedTicks = info.LastWriteTimeUtc.ToFileTimeUtc();
 
@@ -234,11 +239,32 @@ namespace BetterFileSys.Services
 
         private async Task<FileIndexRecord?> BuildRecordAsync(string filePath, FileInfo info, long modifiedTicks)
         {
-            string content = await ReadFileContentAsync(filePath, maxLines: 100);
-            if (string.IsNullOrWhiteSpace(content))
-                return null;
+            string content = "";
 
-            var embedding = await _embeddingService.GetEmbeddingAsync(content);
+            if (IsSupportedTextFile(filePath))
+            {
+                content = await ReadFileContentAsync(filePath, maxLines: 100);
+            }
+            else
+            {
+                // Parse binary document or image content using local Python script
+                content = await ParseBinaryDocumentAsync(filePath);
+            }
+
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                content = Path.GetFileNameWithoutExtension(info.Name);
+            }
+
+            // Prepend the file path and file name to include path context (Downloads, Documents, Pictures, etc.) in the semantic embedding
+            string textToEmbed = $"File Path: {filePath}\nFile Name: {info.Name}\n\nContent:\n{content}";
+            if (textToEmbed.Length > 2000)
+            {
+                // Truncate to fit model sequence/token constraints comfortably
+                textToEmbed = textToEmbed.Substring(0, 2000);
+            }
+
+            var embedding = await _embeddingService.GetEmbeddingAsync(textToEmbed);
             if (embedding == null || embedding.Length == 0)
                 return null;
 
@@ -256,6 +282,67 @@ namespace BetterFileSys.Services
             };
         }
 
+        private string GetParserScriptPath()
+        {
+            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            var current = new DirectoryInfo(baseDir);
+            while (current != null)
+            {
+                var scriptPath = Path.Combine(current.FullName, "FS", "scripts", "parse_document.py");
+                if (File.Exists(scriptPath))
+                    return scriptPath;
+
+                scriptPath = Path.Combine(current.FullName, "scripts", "parse_document.py");
+                if (File.Exists(scriptPath))
+                    return scriptPath;
+
+                current = current.Parent;
+            }
+            throw new FileNotFoundException("Could not locate parse_document.py script relative to the application base directory.");
+        }
+
+        private async Task<string> ParseBinaryDocumentAsync(string filePath)
+        {
+            try
+            {
+                string scriptPath = GetParserScriptPath();
+                var startInfo = new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "python",
+                    Arguments = $"\"{scriptPath}\" \"{filePath}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+                using var process = new System.Diagnostics.Process { StartInfo = startInfo };
+                process.Start();
+
+                var outputTask = process.StandardOutput.ReadToEndAsync();
+                var errorTask = process.StandardError.ReadToEndAsync();
+
+                await Task.WhenAll(outputTask, errorTask);
+                await process.WaitForExitAsync();
+
+                string output = outputTask.Result;
+                string error = errorTask.Result;
+
+                if (process.ExitCode != 0)
+                {
+                    Log($"[INDEX] Parser process exited with code {process.ExitCode}. Error: {error}");
+                    return Path.GetFileNameWithoutExtension(filePath);
+                }
+
+                return output;
+            }
+            catch (Exception ex)
+            {
+                Log($"[INDEX] Error parsing binary document {filePath}: {ex.Message}");
+                return Path.GetFileNameWithoutExtension(filePath);
+            }
+        }
+
         private static bool ShouldIndexFile(string filePath)
         {
             if (string.IsNullOrWhiteSpace(filePath))
@@ -264,6 +351,15 @@ namespace BetterFileSys.Services
             if (Directory.Exists(filePath))
                 return false;
 
+            var extension = Path.GetExtension(filePath).ToLowerInvariant();
+            return extension is ".txt" or ".md" or ".log" or ".json" or ".xml" or ".cs" or ".py" or ".js" or ".html" or ".css"
+                or ".pdf" or ".docx" or ".doc" or ".xls" or ".xlsx" or ".ppt" or ".pptx" or ".png" or ".jpg" or ".jpeg";
+        }
+
+        private static bool IsSupportedTextFile(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+                return false;
             var extension = Path.GetExtension(filePath).ToLowerInvariant();
             return extension is ".txt" or ".md" or ".log" or ".json" or ".xml" or ".cs" or ".py" or ".js" or ".html" or ".css";
         }
@@ -309,6 +405,10 @@ namespace BetterFileSys.Services
                 {
                     try
                     {
+                        var name = Path.GetFileName(dir).ToLowerInvariant();
+                        if (name is ".venv" or "node_modules" or "bin" or "obj" or ".git" or ".idea" or ".vs" or "appdata")
+                            continue;
+
                         var info = new DirectoryInfo(dir);
                         if ((info.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden)
                             continue;
