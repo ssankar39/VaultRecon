@@ -68,6 +68,9 @@ namespace BetterFileSys.Models
             }
             return $"{len:0.##} {sizes[order]}";
         }
+
+        public System.Windows.Media.ImageSource? Icon => BetterFileSys.Services.ShellIconHelper.GetIconForPath(FilePath);
+        public System.Windows.Media.ImageSource? LargeIcon => BetterFileSys.Services.ShellIconHelper.GetIconForPath(FilePath, large: true);
     }
 
     public enum SearchType

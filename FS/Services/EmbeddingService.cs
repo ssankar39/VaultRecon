@@ -21,6 +21,8 @@ namespace BetterFileSys.Services
         private BertTokenizer? _tokenizer;
         private bool _isInitialized = false;
 
+        public bool IsInitialized => _isInitialized;
+
         private void Log(string message)
         {
             try

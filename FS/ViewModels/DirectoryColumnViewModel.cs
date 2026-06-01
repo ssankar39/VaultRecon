@@ -18,6 +18,10 @@ namespace BetterFileSys.ViewModels
         [ObservableProperty]
         private ObservableCollection<FileItem> items = new();
 
+        public System.Windows.Media.ImageSource? Icon => Path == "QuickAccess"
+            ? BetterFileSys.Services.ShellIconHelper.GetIconForPath(System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile))
+            : BetterFileSys.Services.ShellIconHelper.GetIconForPath(Path);
+
         private FileItem? _selectedItem;
         public FileItem? SelectedItem
         {

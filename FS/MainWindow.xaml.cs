@@ -38,5 +38,15 @@ namespace BetterFileSys
             _viewModel?.Cleanup();
             base.OnClosed(e);
         }
+
+        private void OptionButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement element && element.ContextMenu != null)
+            {
+                element.ContextMenu.PlacementTarget = element;
+                element.ContextMenu.IsOpen = true;
+            }
+        }
     }
 }
+

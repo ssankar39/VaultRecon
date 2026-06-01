@@ -1,9 +1,11 @@
 <Window x:Class="BetterFileSys.MainWindow"
+        x:Name="MainWindowInstance"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:BetterFileSys"
         xmlns:viewmodels="clr-namespace:BetterFileSys.ViewModels"
         xmlns:models="clr-namespace:BetterFileSys.Models"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         Title="VaultRecon - Semantic Search &amp; Explorer" Height="780" Width="1200" 
         WindowStartupLocation="CenterScreen" Background="#0C0D11">
     
@@ -101,35 +103,35 @@
                         <!-- Cut -->
                         <Button Grid.Column="0" Command="{Binding Path=PlacementTarget.Tag.CopyPathCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" ToolTip="Cut" Style="{StaticResource SmallToolbarButton}">
                             <StackPanel>
-                                <TextBlock Text="✂️" FontSize="14" HorizontalAlignment="Center"/>
+                                <TextBlock Text="&#xE8C6;" FontFamily="Segoe MDL2 Assets" FontSize="14" HorizontalAlignment="Center"/>
                                 <TextBlock Text="Cut" FontSize="9" HorizontalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
                             </StackPanel>
                         </Button>
                         <!-- Copy -->
                         <Button Grid.Column="1" Command="{Binding Path=PlacementTarget.Tag.CopyPathCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" ToolTip="Copy" Style="{StaticResource SmallToolbarButton}">
                             <StackPanel>
-                                <TextBlock Text="📄" FontSize="14" HorizontalAlignment="Center"/>
+                                <TextBlock Text="&#xE8C8;" FontFamily="Segoe MDL2 Assets" FontSize="14" HorizontalAlignment="Center"/>
                                 <TextBlock Text="Copy" FontSize="9" HorizontalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
                             </StackPanel>
                         </Button>
                         <!-- Rename -->
                         <Button Grid.Column="2" Command="{Binding Path=PlacementTarget.Tag.ShowPropertiesCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" ToolTip="Rename" Style="{StaticResource SmallToolbarButton}">
                             <StackPanel>
-                                <TextBlock Text="✏️" FontSize="14" HorizontalAlignment="Center"/>
+                                <TextBlock Text="&#xE8AC;" FontFamily="Segoe MDL2 Assets" FontSize="14" HorizontalAlignment="Center"/>
                                 <TextBlock Text="Rename" FontSize="9" HorizontalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
                             </StackPanel>
                         </Button>
                         <!-- Share -->
                         <Button Grid.Column="3" Command="{Binding Path=PlacementTarget.Tag.CopyPathCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" ToolTip="Share" Style="{StaticResource SmallToolbarButton}">
                             <StackPanel>
-                                <TextBlock Text="↪️" FontSize="14" HorizontalAlignment="Center"/>
+                                <TextBlock Text="&#xE72D;" FontFamily="Segoe MDL2 Assets" FontSize="14" HorizontalAlignment="Center"/>
                                 <TextBlock Text="Share" FontSize="9" HorizontalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
                             </StackPanel>
                         </Button>
                         <!-- Delete -->
                         <Button Grid.Column="4" Command="{Binding Path=PlacementTarget.Tag.DeleteFileCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" ToolTip="Delete" Style="{StaticResource SmallToolbarButton}">
                             <StackPanel>
-                                <TextBlock Text="🗑️" FontSize="14" HorizontalAlignment="Center"/>
+                                <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" FontSize="14" HorizontalAlignment="Center"/>
                                 <TextBlock Text="Delete" FontSize="9" HorizontalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
                             </StackPanel>
                         </Button>
@@ -139,34 +141,39 @@
             
             <Separator Background="#2E3245" Margin="0,4"/>
             
-            <!-- Standard Items -->
             <MenuItem Header="Open" Command="{Binding Path=PlacementTarget.Tag.OpenFileCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" InputGestureText="Enter" Style="{StaticResource ModernMenuItemStyle}">
                 <MenuItem.Icon>
-                    <TextBlock Text="🚀" FontSize="12"/>
+                    <TextBlock Text="&#xE8A7;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            
+            <MenuItem Header="Pin to Quick Access" Command="{Binding Path=PlacementTarget.Tag.PinFolderToSidebarCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" CommandParameter="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Style="{StaticResource ModernMenuItemStyle}">
+                <MenuItem.Icon>
+                    <TextBlock Text="&#xE718;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center"/>
                 </MenuItem.Icon>
             </MenuItem>
             
             <MenuItem Header="Run as administrator" Command="{Binding Path=PlacementTarget.Tag.RunAsAdminCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Style="{StaticResource ModernMenuItemStyle}">
                 <MenuItem.Icon>
-                    <TextBlock Text="🛡️" FontSize="12"/>
+                    <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center"/>
                 </MenuItem.Icon>
             </MenuItem>
             
             <MenuItem Header="Open folder location" Command="{Binding Path=PlacementTarget.Tag.OpenFolderCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Style="{StaticResource ModernMenuItemStyle}">
                 <MenuItem.Icon>
-                    <TextBlock Text="📁" FontSize="12"/>
+                    <TextBlock Text="&#xE838;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center"/>
                 </MenuItem.Icon>
             </MenuItem>
 
             <MenuItem Header="Copy as path" Command="{Binding Path=PlacementTarget.Tag.CopyPathCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" InputGestureText="Ctrl+Shift+C" Style="{StaticResource ModernMenuItemStyle}">
                 <MenuItem.Icon>
-                    <TextBlock Text="🔗" FontSize="12"/>
+                    <TextBlock Text="&#xE71B;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center"/>
                 </MenuItem.Icon>
             </MenuItem>
             
             <MenuItem Header="Properties" Command="{Binding Path=PlacementTarget.Tag.ShowPropertiesCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" InputGestureText="Alt+Enter" Style="{StaticResource ModernMenuItemStyle}">
                 <MenuItem.Icon>
-                    <TextBlock Text="ℹ️" FontSize="12"/>
+                    <TextBlock Text="&#xE946;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center"/>
                 </MenuItem.Icon>
             </MenuItem>
             
@@ -174,7 +181,7 @@
             
             <MenuItem Header="Edit in Notepad" Command="{Binding Path=PlacementTarget.Tag.EditInNotepadCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Style="{StaticResource ModernMenuItemStyle}">
                 <MenuItem.Icon>
-                    <TextBlock Text="📝" FontSize="12"/>
+                    <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center"/>
                 </MenuItem.Icon>
             </MenuItem>
         </ContextMenu>
@@ -288,11 +295,12 @@
             <Setter Property="Padding" Value="8,6"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="0" CornerRadius="6" Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
@@ -331,8 +339,107 @@
                 </Setter.Value>
             </Setter>
         </Style>
-    </Window.Resources>
 
+        <sys:Boolean x:Key="TrueValue">True</sys:Boolean>
+        <sys:Boolean x:Key="FalseValue">False</sys:Boolean>
+
+        <!-- Details Template -->
+        <DataTemplate x:Key="ExplorerDetailsTemplate" DataType="{x:Type models:FileItem}">
+            <Grid Margin="0,2">
+                <Grid.InputBindings>
+                    <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.OpenFileFromItemCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                </Grid.InputBindings>
+                <Grid.ColumnDefinitions>
+                    <!-- Icon + Name -->
+                    <ColumnDefinition Width="*"/>
+                    <!-- Extension Tag -->
+                    <ColumnDefinition Width="45"/>
+                    <!-- Age Badge -->
+                    <ColumnDefinition Width="40"/>
+                    <!-- Modified -->
+                    <ColumnDefinition Width="105"/>
+                    <!-- Size -->
+                    <ColumnDefinition Width="60"/>
+                    <!-- Chevron -->
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Icon + Name -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Image Source="{Binding Icon}" Width="16" Height="16" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Name}" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Extension -->
+                <TextBlock Grid.Column="1" Text="{Binding ExtensionTag}" FontSize="10.5" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,6,0"/>
+
+                <!-- Age Pill -->
+                <Border Grid.Column="2" CornerRadius="4" Padding="4,2" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{Binding RelativeAgeColor}">
+                    <TextBlock Text="{Binding RelativeAge}" FontSize="9.5" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+
+                <!-- Date Modified -->
+                <TextBlock Grid.Column="3" Text="{Binding Modified, StringFormat={}{0:yyyy-MM-dd HH:mm}}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" Margin="6,0,0,0"/>
+
+                <!-- Size -->
+                <TextBlock Grid.Column="4" Text="{Binding FormattedSize}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,4,0"/>
+
+                <!-- Chevron -->
+                <TextBlock Grid.Column="5" Text="›" FontSize="13" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" Margin="2,0,2,0" VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsDirectory}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+        </DataTemplate>
+
+        <!-- Grid (Icon View) Template -->
+        <DataTemplate x:Key="ExplorerGridTemplate" DataType="{x:Type models:FileItem}">
+            <Border Width="85" Height="90" Background="Transparent" CornerRadius="6" Padding="6" SnapsToDevicePixels="True">
+                <Grid>
+                    <Grid.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.OpenFileFromItemCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                    </Grid.InputBindings>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!-- Icon (Large) -->
+                    <Image Grid.Row="0" Source="{Binding Icon}" Width="40" Height="40" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    
+                    <!-- Name -->
+                    <TextBlock Grid.Row="1" Text="{Binding Name}" FontSize="11" Foreground="{StaticResource TextPrimaryBrush}" 
+                               HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" MaxHeight="28"
+                               TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <!-- List Template -->
+        <DataTemplate x:Key="ExplorerListTemplate" DataType="{x:Type models:FileItem}">
+            <Grid Margin="0,2">
+                <Grid.InputBindings>
+                    <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.OpenFileFromItemCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                </Grid.InputBindings>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <Image Grid.Column="0" Source="{Binding Icon}" Width="16" Height="16" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Text="{Binding Name}" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <!-- Top Dashboard Bar -->
@@ -359,36 +466,6 @@
                     <Border Background="#2E3245" CornerRadius="4" Margin="10,2,0,2" Padding="6,2">
                         <TextBlock Text="v1.0" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
                     </Border>
-                </StackPanel>
-
-                <!-- View Selection Tabs -->
-                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                    <!-- Tab 0: Semantic Search -->
-                    <Button Content="Semantic Search" Command="{Binding SelectSearchTabCommand}">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource TabHeaderButton}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding SelectedTab}" Value="0">
-                                        <Setter Property="Foreground" Value="{StaticResource CyanAccentBrush}"/>
-                                        <Setter Property="BorderBrush" Value="{StaticResource CyanAccentBrush}"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-                    <!-- Tab 1: File Explorer -->
-                    <Button Content="File Explorer" Command="{Binding SelectExplorerTabCommand}" Margin="20,0,0,0">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource TabHeaderButton}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding SelectedTab}" Value="1">
-                                        <Setter Property="Foreground" Value="{StaticResource PurpleAccentBrush}"/>
-                                        <Setter Property="BorderBrush" Value="{StaticResource PurpleAccentBrush}"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
                 </StackPanel>
 
                 <!-- Status Summary -->
@@ -437,20 +514,30 @@
                             <!-- Drives Section -->
                             <TextBlock Text="Drives" FontSize="11" FontWeight="Bold" Foreground="#4F567A" Margin="0,0,0,10"/>
                             
-                            <Grid Margin="0,0,0,20">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="💾" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                <StackPanel Grid.Column="1">
-                                    <Grid>
-                                        <TextBlock Text="C: Main Disk" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
-                                        <TextBlock Text="759 GB" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Right"/>
-                                    </Grid>
-                                    <ProgressBar Value="72" Height="4" Foreground="{StaticResource CyanAccentBrush}" Background="#2E3245" BorderThickness="0" Margin="0,4,0,0"/>
-                                </StackPanel>
-                            </Grid>
+                            <ItemsControl ItemsSource="{Binding Drives}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type models:DriveItemViewModel}">
+                                        <Button Command="{Binding DataContext.NavigateToFolderCommand, ElementName=MainWindowInstance}" 
+                                                CommandParameter="{Binding Path}" 
+                                                Style="{StaticResource SidebarButtonStyle}" HorizontalContentAlignment="Stretch" Margin="0,0,0,15" Padding="8,6">
+                                            <Grid HorizontalAlignment="Stretch">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Image Grid.Column="0" Source="{Binding Icon}" Width="16" Height="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                <StackPanel Grid.Column="1" HorizontalAlignment="Stretch">
+                                                    <Grid HorizontalAlignment="Stretch">
+                                                        <TextBlock Text="{Binding Name}" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                                        <TextBlock Text="{Binding FreeSpaceText}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Right"/>
+                                                    </Grid>
+                                                    <ProgressBar Value="{Binding PercentUsed}" Height="4" Foreground="{StaticResource CyanAccentBrush}" Background="#2E3245" BorderThickness="0" Margin="0,4,0,0"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                             
                             <!-- Network Section -->
                             <Grid Margin="0,0,0,20">
@@ -458,91 +545,85 @@
                                 <TextBlock Text="..." FontSize="12" Foreground="#4F567A" HorizontalAlignment="Right" Cursor="Hand"/>
                             </Grid>
                             
-                            <!-- User Profile Folder Section (sarve) -->
-                            <Grid Margin="0,0,0,10">
-                                <TextBlock Text="sarve" FontSize="11" FontWeight="Bold" Foreground="#4F567A"/>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <TextBlock Text="..." FontSize="12" Foreground="#4F567A" Margin="0,0,8,0" Cursor="Hand"/>
-                                    <TextBlock Text="+" FontSize="12" Foreground="#4F567A" Cursor="Hand"/>
-                                </StackPanel>
-                            </Grid>
-                            
-                            <!-- Navigation Items styled exactly like OneCommander -->
-                            <StackPanel Margin="0,0,0,20">
-                                <!-- This PC -->
-                                <Button Command="{Binding SelectExplorerTabCommand}" Style="{StaticResource SidebarButtonStyle}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="🖥️" Margin="0,0,10,0" FontSize="13" VerticalAlignment="Center"/>
-                                        <TextBlock Text="This PC" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
-                                    </StackPanel>
-                                </Button>
-                                <!-- Desktop -->
-                                <Button Command="{Binding NavigateDesktopCommand}" Style="{StaticResource SidebarButtonStyle}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="🖥️" Margin="0,0,10,0" FontSize="13" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Desktop" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
-                                    </StackPanel>
-                                </Button>
-                                <!-- Documents -->
-                                <Button Command="{Binding NavigateDocumentsCommand}" Style="{StaticResource SidebarButtonStyle}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="📁" Margin="0,0,10,0" FontSize="13" Foreground="#EAB308" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Documents" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
-                                    </StackPanel>
-                                </Button>
-                                <!-- Pictures -->
-                                <Button Command="{Binding NavigatePicturesCommand}" Style="{StaticResource SidebarButtonStyle}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="🏞️" Margin="0,0,10,0" FontSize="13" Foreground="#06B6D4" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Pictures" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
-                                    </StackPanel>
-                                </Button>
-                                <!-- Videos -->
-                                <Button Style="{StaticResource SidebarButtonStyle}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="🎬" Margin="0,0,10,0" FontSize="13" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Videos" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
-                                    </StackPanel>
-                                </Button>
-                                <!-- Music -->
-                                <Button Style="{StaticResource SidebarButtonStyle}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="🎵" Margin="0,0,10,0" FontSize="13" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Music" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
-                                    </StackPanel>
-                                </Button>
-                                <!-- Downloads -->
-                                <Button Command="{Binding NavigateDownloadsCommand}" Style="{StaticResource SidebarButtonStyle}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="📥" Margin="0,0,10,0" FontSize="13" Foreground="#3B82F6" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Downloads" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
-                                    </StackPanel>
-                                </Button>
-                                <!-- Programs -->
-                                <Button Style="{StaticResource SidebarButtonStyle}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="⚙️" Margin="0,0,10,0" FontSize="13" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Programs" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
-                                    </StackPanel>
-                                </Button>
-                                <!-- Recent Items -->
-                                <Button Style="{StaticResource SidebarButtonStyle}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="⏱️" Margin="0,0,10,0" FontSize="13" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Recent Items" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
-                                    </StackPanel>
-                                </Button>
-                                <!-- Recycle Bin -->
-                                <Button Style="{StaticResource SidebarButtonStyle}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="🗑️" Margin="0,0,10,0" FontSize="13" VerticalAlignment="Center"/>
-                                        <TextBlock Text="Recycle Bin" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
-                                    </StackPanel>
-                                </Button>
-                            </StackPanel>
+                            <!-- Dynamic Sidebar Groups -->
+                            <ItemsControl ItemsSource="{Binding SidebarGroups}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type viewmodels:SidebarGroup}">
+                                        <StackPanel Margin="0,0,0,20">
+                                            <!-- Group Header Grid -->
+                                            <Grid Margin="0,0,0,10">
+                                                <TextBlock Text="{Binding Name}" FontSize="11" FontWeight="Bold" Foreground="#4F567A" VerticalAlignment="Center"/>
+                                                
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                                    <!-- Add Button -->
+                                                    <Button Command="{Binding DataContext.AddShortcutToGroupCommand, ElementName=MainWindowInstance}"
+                                                            CommandParameter="{Binding}"
+                                                            Style="{StaticResource SmallToolbarButton}" Margin="0,0,8,0" ToolTip="Add shortcut folder">
+                                                        <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" FontSize="11"/>
+                                                    </Button>
+                                                    
+                                                    <!-- Options Button (Menu) -->
+                                                    <Button Style="{StaticResource SmallToolbarButton}" ToolTip="Options" Click="OptionButton_Click" Tag="{Binding DataContext, ElementName=MainWindowInstance}">
+                                                        <Button.ContextMenu>
+                                                            <ContextMenu Style="{StaticResource ModernContextMenuStyle}">
+                                                                <MenuItem Header="Rename Group" 
+                                                                          Command="{Binding Path=PlacementTarget.Tag.RenameGroupCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" 
+                                                                          CommandParameter="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}" 
+                                                                          Style="{StaticResource ModernMenuItemStyle}">
+                                                                    <MenuItem.Icon>
+                                                                        <TextBlock Text="&#xE8AC;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center"/>
+                                                                    </MenuItem.Icon>
+                                                                </MenuItem>
+                                                                <MenuItem Header="Delete Group" 
+                                                                          Command="{Binding Path=PlacementTarget.Tag.DeleteGroupCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" 
+                                                                          CommandParameter="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}" 
+                                                                          Style="{StaticResource ModernMenuItemStyle}">
+                                                                    <MenuItem.Icon>
+                                                                        <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center"/>
+                                                                    </MenuItem.Icon>
+                                                                </MenuItem>
+                                                            </ContextMenu>
+                                                        </Button.ContextMenu>
+                                                        <TextBlock Text="&#xE712;" FontFamily="Segoe MDL2 Assets" FontSize="11"/>
+                                                    </Button>
+                                                </StackPanel>
+                                            </Grid>
+                                            
+                                            <!-- Group Items List -->
+                                            <ItemsControl ItemsSource="{Binding Items}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate DataType="{x:Type models:FileItem}">
+                                                        <Button Command="{Binding DataContext.NavigateToFolderCommand, ElementName=MainWindowInstance}"
+                                                                CommandParameter="{Binding Path}"
+                                                                Style="{StaticResource SidebarButtonStyle}"
+                                                                Tag="{Binding DataContext, ElementName=MainWindowInstance}">
+                                                            <Button.ContextMenu>
+                                                                <ContextMenu Style="{StaticResource ModernContextMenuStyle}">
+                                                                    <MenuItem Header="Remove from Sidebar" 
+                                                                              Command="{Binding Path=PlacementTarget.Tag.RemoveShortcutCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" 
+                                                                              CommandParameter="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource AncestorType=ContextMenu}}" 
+                                                                              Style="{StaticResource ModernMenuItemStyle}">
+                                                                        <MenuItem.Icon>
+                                                                            <TextBlock Text="&#xE75A;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center"/>
+                                                                        </MenuItem.Icon>
+                                                                    </MenuItem>
+                                                                </ContextMenu>
+                                                            </Button.ContextMenu>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Image Source="{Binding Icon}" Width="16" Height="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                                <TextBlock Text="{Binding Name}" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                                            </StackPanel>
+                                                        </Button>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                             
                             <!-- New Group Button -->
-                            <Button Content="New group" Foreground="{StaticResource TextSecondaryBrush}" Padding="10,6" Margin="0,0,0,20" HorizontalAlignment="Stretch">
+                            <Button Content="New group" Command="{Binding CreateNewGroupCommand}" Foreground="{StaticResource TextSecondaryBrush}" Padding="10,6" Margin="0,0,0,20" HorizontalAlignment="Stretch">
                                 <Button.Style>
                                     <Style TargetType="Button">
                                         <Setter Property="Background" Value="Transparent"/>
@@ -570,21 +651,37 @@
                             
                             <!-- History Section -->
                             <TextBlock Text="History" FontSize="11" FontWeight="Bold" Foreground="#4F567A" Margin="0,0,0,10"/>
-                            <Button Command="{Binding NavigatePicturesCommand}" Style="{StaticResource SidebarButtonStyle}">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="🏞️" Margin="0,0,10,0" FontSize="13" VerticalAlignment="Center"/>
-                                    <TextBlock Text="Pictures" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
-                                </StackPanel>
-                            </Button>
+                            <ItemsControl ItemsSource="{Binding HistoryItems}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type models:FileItem}">
+                                        <Button Command="{Binding DataContext.NavigateToFolderCommand, ElementName=MainWindowInstance}"
+                                                CommandParameter="{Binding Path}"
+                                                Style="{StaticResource SidebarButtonStyle}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Source="{Binding Icon}" Width="16" Height="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding Name}" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </StackPanel>
                     </ScrollViewer>
                     
                     <!-- Bottom Mini Toolbar -->
                     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,5,0,0">
-                        <Button Content="ℹ️" Style="{StaticResource SmallToolbarButton}" FontSize="12" Margin="0,0,12,0"/>
-                        <Button Content="⚙️" Style="{StaticResource SmallToolbarButton}" FontSize="12" Margin="0,0,12,0"/>
-                        <Button Content="🔍" Style="{StaticResource SmallToolbarButton}" FontSize="12" Margin="0,0,12,0"/>
-                        <Button Content="🔄" Style="{StaticResource SmallToolbarButton}" FontSize="12" Margin="0,0,12,0"/>
+                        <Button ToolTip="About" Command="{Binding ShowAboutCommand}" Style="{StaticResource SmallToolbarButton}" Margin="0,0,12,0">
+                            <TextBlock Text="&#xE946;" FontFamily="Segoe MDL2 Assets" FontSize="12"/>
+                        </Button>
+                        <Button ToolTip="Settings &amp; Diagnostics" Command="{Binding ShowSettingsCommand}" Style="{StaticResource SmallToolbarButton}" Margin="0,0,12,0">
+                            <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="12"/>
+                        </Button>
+                        <Button ToolTip="Search" Command="{Binding ToggleSearchOverlayCommand}" Style="{StaticResource SmallToolbarButton}" Margin="0,0,12,0">
+                            <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="12"/>
+                        </Button>
+                        <Button ToolTip="Re-Index Folder" Command="{Binding TriggerDeltaScanCommand}" Style="{StaticResource SmallToolbarButton}">
+                            <TextBlock Text="&#xE72C;" FontFamily="Segoe MDL2 Assets" FontSize="12"/>
+                        </Button>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -592,362 +689,8 @@
             <!-- TAB PAGES CONTAINER (COLUMN 1) -->
             <Grid Grid.Column="1" Margin="20">
                 
-                <!-- TAB 0: SEMANTIC SEARCH PANEL -->
-                <Grid x:Name="SearchPanel">
-                    <Grid.Style>
-                        <Style TargetType="Grid">
-                            <Setter Property="Visibility" Value="Visible"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding SelectedTab}" Value="1">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Grid.Style>
-                    
-                    <Grid.RowDefinitions>
-                        <!-- Search Box Row -->
-                        <RowDefinition Height="Auto"/>
-                        <!-- Header Filter Bar Row -->
-                        <RowDefinition Height="Auto"/>
-                        <!-- Results List Row -->
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <!-- Search Inputs -->
-                    <Grid Grid.Row="0" Margin="0,0,0,15">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        
-                        <TextBox Grid.Column="0" Height="42" 
-                                 Text="{Binding SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource ModernTextBox}"
-                                 Tag="Search files by meaning or filename...">
-                            <TextBox.InputBindings>
-                                <KeyBinding Key="Return" Command="{Binding PerformSearchCommand}"/>
-                            </TextBox.InputBindings>
-                        </TextBox>
-                        
-                        <Button Grid.Column="1" Content="Search" Width="100" Height="42" Margin="10,0,0,0" 
-                                Command="{Binding PerformSearchCommand}" Style="{StaticResource AccentButton}"/>
-                        
-                        <Button Grid.Column="2" Content="Clear" Width="80" Height="42" Margin="10,0,0,0" 
-                                Command="{Binding ClearSearchCommand}" Style="{StaticResource ModernButton}"/>
-                    </Grid>
-
-                    <!-- Sort Filter Header Bar -->
-                    <Border Grid.Row="1" Background="#161822" BorderBrush="#2E3245" BorderThickness="1" CornerRadius="6" Padding="15,8" Margin="0,0,0,10">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="1.5*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="1*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <!-- Name Sort Trigger -->
-                            <Button Grid.Column="0" Command="{Binding SortResultsCommand}" CommandParameter="Name" Style="{StaticResource SortHeaderButtonStyle}">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Name" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
-                                    <TextBlock Text="  ▲" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource CyanAccentBrush}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Name"/>
-                                                            <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="True"/>
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                    <TextBlock Text="  ▼" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Name"/>
-                                                            <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="False"/>
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </StackPanel>
-                            </Button>
-
-                            <!-- Date modified Sort Trigger -->
-                            <Button Grid.Column="1" Command="{Binding SortResultsCommand}" CommandParameter="Date modified" Style="{StaticResource SortHeaderButtonStyle}">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Date modified" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
-                                    <TextBlock Text="  ▲" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource CyanAccentBrush}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Date modified"/>
-                                                            <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="True"/>
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                    <TextBlock Text="  ▼" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource CyanAccentBrush}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Date modified"/>
-                                                            <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="False"/>
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </StackPanel>
-                            </Button>
-
-                            <!-- Type Sort Trigger -->
-                            <Button Grid.Column="2" Command="{Binding SortResultsCommand}" CommandParameter="Type" Style="{StaticResource SortHeaderButtonStyle}">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Type" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
-                                    <TextBlock Text="  ▲" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource CyanAccentBrush}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Type"/>
-                                                            <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="True"/>
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                    <TextBlock Text="  ▼" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource CyanAccentBrush}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Type"/>
-                                                            <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="False"/>
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </StackPanel>
-                            </Button>
-
-                            <!-- Size Sort Trigger -->
-                            <Button Grid.Column="3" Command="{Binding SortResultsCommand}" CommandParameter="Size" Style="{StaticResource SortHeaderButtonStyle}">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Size" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
-                                    <TextBlock Text="  ▲" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource CyanAccentBrush}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Size"/>
-                                                            <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="True"/>
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                    <TextBlock Text="  ▼" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource CyanAccentBrush}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Size"/>
-                                                            <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="False"/>
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </StackPanel>
-                            </Button>
-
-                            <!-- Score Sort Trigger -->
-                            <Button Grid.Column="4" Command="{Binding SortResultsCommand}" CommandParameter="Score" Style="{StaticResource SortHeaderButtonStyle}">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Score" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
-                                    <TextBlock Text="  ▲" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource CyanAccentBrush}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Score"/>
-                                                            <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="True"/>
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                    <TextBlock Text="  ▼" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource CyanAccentBrush}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Score"/>
-                                                            <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="False"/>
-                                                        </MultiDataTrigger.Conditions>
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </StackPanel>
-                            </Button>
-                        </Grid>
-                    </Border>
-
-                    <!-- Search Results Cards -->
-                    <ListBox Grid.Row="2" ItemsSource="{Binding SearchResults}" 
-                             SelectedItem="{Binding SelectedSearchResult, Mode=TwoWay}"
-                             Background="Transparent" BorderThickness="0" 
-                             ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                             ItemContainerStyle="{StaticResource SearchResultItemStyle}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate DataType="{x:Type models:SearchResult}">
-                                <Grid>
-                                    <Grid.InputBindings>
-                                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.OpenFileCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
-                                    </Grid.InputBindings>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-
-                                    <!-- Row 1: File Name + Extension Badge -->
-                                    <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
-                                        <TextBlock Text="📄" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                        <TextBlock Text="{Binding FileName}" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
-                                    </StackPanel>
-
-                                    <!-- Match Type Badge -->
-                                    <Border Grid.Column="1" Grid.Row="0" CornerRadius="4" Padding="6,2" VerticalAlignment="Center">
-                                        <Border.Style>
-                                            <Style TargetType="Border">
-                                                <Setter Property="Background" Value="#2E3245" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding SearchType}" Value="Semantic">
-                                                        <Setter Property="Background" Value="#002D33" />
-                                                        <Setter Property="BorderBrush" Value="#00F2FE" />
-                                                        <Setter Property="BorderThickness" Value="1" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding SearchType}" Value="Hybrid">
-                                                        <Setter Property="Background" Value="#250F3A" />
-                                                        <Setter Property="BorderBrush" Value="#7F00FF" />
-                                                        <Setter Property="BorderThickness" Value="1" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Border.Style>
-                                        <TextBlock FontSize="10" FontWeight="Bold">
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock">
-                                                    <Setter Property="Text" Value="Keyword" />
-                                                    <Setter Property="Foreground" Value="#9499B0" />
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding SearchType}" Value="Semantic">
-                                                            <Setter Property="Text" Value="Semantic" />
-                                                            <Setter Property="Foreground" Value="#00F2FE" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding SearchType}" Value="Hybrid">
-                                                            <Setter Property="Text" Value="Hybrid" />
-                                                            <Setter Property="Foreground" Value="#D8B4FE" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
-                                    </Border>
-
-                                    <!-- Row 2: File Path -->
-                                    <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" 
-                                               Text="{Binding FilePath}" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" 
-                                               Margin="22,4,0,4" TextTrimming="CharacterEllipsis"/>
-
-                                    <!-- Row 3: Size & Date Details -->
-                                    <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Orientation="Horizontal" Margin="22,2,0,0">
-                                        <TextBlock Text="Size: " FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
-                                        <TextBlock Text="{Binding FormattedSize}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,15,0"/>
-                                        
-                                        <TextBlock Text="Modified: " FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
-                                        <TextBlock Text="{Binding Modified, StringFormat={}{0:yyyy-MM-dd HH:mm}}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,15,0"/>
-
-                                        <TextBlock Text="Score: " FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
-                                        <TextBlock Text="{Binding RelevanceScore, StringFormat={}{0:F2}}" FontSize="11" Foreground="{StaticResource CyanAccentBrush}"/>
-                                    </StackPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </Grid>
-
-                <!-- TAB 1: MILLER COLUMNS FILE EXPLORER PANEL -->
+                <!-- FILE EXPLORER PANEL -->
                 <Grid x:Name="ExplorerPanel">
-                    <Grid.Style>
-                        <Style TargetType="Grid">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding SelectedTab}" Value="1">
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Grid.Style>
-
                     <Grid.RowDefinitions>
                         <!-- Breadcrumbs -->
                         <RowDefinition Height="Auto"/>
@@ -955,18 +698,115 @@
                         <RowDefinition Height="Auto"/>
                         <!-- Toolbar/Action bar -->
                         <RowDefinition Height="Auto"/>
-                        <!-- Miller Columns ScrollViewer -->
+                        <!-- Miller Columns & Search Overlay ScrollViewer stacked -->
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Row 0: Breadcrumbs -->
-                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
-                        <TextBlock Text="This PC" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
-                        <TextBlock Text="  \  " FontSize="11" Foreground="#4F567A"/>
-                        <TextBlock Text="C:" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
-                        <TextBlock Text="  \  " FontSize="11" Foreground="#4F567A"/>
-                        <TextBlock Text="{Binding ActiveFolderPath}" FontSize="11" Foreground="{StaticResource TextPrimaryBrush}"/>
-                    </StackPanel>
+                    <!-- Dynamic Windows-style Address Bar -->
+                    <Border Grid.Row="0" Background="#161822" BorderBrush="#2E3245" BorderThickness="1" CornerRadius="6" Padding="8,4" Margin="0,0,0,15">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <!-- Dropdown symbol at the start -->
+                                <ColumnDefinition Width="Auto"/>
+                                <!-- Clickable breadcrumbs OR Editable textbox -->
+                                <ColumnDefinition Width="*"/>
+                                <!-- Toggle edit button on the right -->
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <!-- Left: Dropdown chevron/symbol -->
+                            <Button Grid.Column="0" Command="{Binding StartEditPathCommand}" Style="{StaticResource SmallToolbarButton}" Margin="0,0,6,0" ToolTip="Click to type path">
+                                <TextBlock Text="&#xE700;" FontFamily="Segoe MDL2 Assets" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            </Button>
+                            
+                            <!-- Middle: Breadcrumbs (Visible when IsEditingPath = False) -->
+                            <ItemsControl Grid.Column="1" ItemsSource="{Binding Breadcrumbs}" VerticalAlignment="Center">
+                                <ItemsControl.Style>
+                                    <Style TargetType="ItemsControl">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsEditingPath}" Value="True">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ItemsControl.Style>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type viewmodels:BreadcrumbSegment}">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Button Content="{Binding Name}" 
+                                                    Command="{Binding DataContext.NavigateToFolderCommand, ElementName=MainWindowInstance}" 
+                                                    CommandParameter="{Binding Path}"
+                                                    Padding="4,2" FontSize="11.5" Foreground="{StaticResource CyanAccentBrush}" FontWeight="SemiBold" Cursor="Hand">
+                                                <Button.Style>
+                                                    <Style TargetType="Button">
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                        <Setter Property="BorderThickness" Value="0"/>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="Button">
+                                                                    <Border Background="Transparent" CornerRadius="3" Padding="{TemplateBinding Padding}">
+                                                                        <ContentPresenter />
+                                                                    </Border>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter Property="Background" Value="{StaticResource HoverGrayBrush}"/>
+                                                                            <Setter Property="Foreground" Value="{StaticResource PurpleAccentBrush}"/>
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                            <TextBlock Text="  \  " FontSize="11" Foreground="#4F567A" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            
+                            <!-- Middle: Editable TextBox (Visible when IsEditingPath = True) -->
+                            <TextBox Grid.Column="1" Text="{Binding EditablePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                     Background="Transparent" Foreground="{StaticResource TextPrimaryBrush}" 
+                                     BorderThickness="0" FontSize="12" VerticalAlignment="Center" Margin="5,0,0,0">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsEditingPath}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                                <TextBox.InputBindings>
+                                    <KeyBinding Key="Return" Command="{Binding SubmitPathCommand}"/>
+                                    <KeyBinding Key="Esc" Command="{Binding CancelEditPathCommand}"/>
+                                </TextBox.InputBindings>
+                            </TextBox>
+                            
+                            <!-- Right: Edit/Breadcrumbs Toggle Pen Button -->
+                            <Button Grid.Column="2" Command="{Binding StartEditPathCommand}" ToolTip="Edit path">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource SmallToolbarButton}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsEditingPath}" Value="True">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                            </Button>
+                        </Grid>
+                    </Border>
 
                     <!-- Row 1: Folder title & details -->
                     <Grid Grid.Row="1" Margin="0,0,0,15">
@@ -988,39 +828,271 @@
                             
                             <!-- Left: Navigation Arrows -->
                             <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                <Button Content="←" Style="{StaticResource SmallToolbarButton}" FontSize="12" Margin="0,0,12,0"/>
-                                <Button Content="→" Style="{StaticResource SmallToolbarButton}" FontSize="12" Margin="0,0,12,0"/>
-                                <Button Content="↑" Style="{StaticResource SmallToolbarButton}" FontSize="12" Margin="0,0,12,0"/>
-                                <Button Content="⌂" Style="{StaticResource SmallToolbarButton}" FontSize="12"/>
+                                <Button Content="←" Command="{Binding NavigateBackCommand}" IsEnabled="{Binding CanNavigateBack}" Style="{StaticResource SmallToolbarButton}" FontSize="12" Margin="0,0,12,0"/>
+                                <Button Content="→" Command="{Binding NavigateForwardCommand}" IsEnabled="{Binding CanNavigateForward}" Style="{StaticResource SmallToolbarButton}" FontSize="12" Margin="0,0,12,0"/>
+                                <Button Content="↑" Command="{Binding NavigateUpCommand}" Style="{StaticResource SmallToolbarButton}" FontSize="12" Margin="0,0,12,0"/>
+                                <Button Content="⌂" Command="{Binding NavigateToFolderCommand}" CommandParameter="QuickAccess" Style="{StaticResource SmallToolbarButton}" FontSize="12"/>
                             </StackPanel>
 
-                            <!-- Middle: View Styles -->
+                            <!-- Middle: View Styles & Search Toggle -->
                             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button Content="≡ List" Style="{StaticResource SmallToolbarButton}" FontSize="11" Margin="0,0,15,0"/>
-                                <Button Content="⊞ Grid" Style="{StaticResource SmallToolbarButton}" FontSize="11" Margin="0,0,15,0"/>
-                                <Button Content="📊 Columns" Style="{StaticResource SmallToolbarButton}" Foreground="{StaticResource CyanAccentBrush}" FontSize="11" FontWeight="Bold"/>
+                                <!-- View dropdown instead of static buttons -->
+                                <Button Style="{StaticResource SmallToolbarButton}" Click="OptionButton_Click" Tag="{Binding DataContext, ElementName=MainWindowInstance}" Margin="0,0,15,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE179;" FontFamily="Segoe MDL2 Assets" FontSize="11" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="View" FontSize="11" VerticalAlignment="Center"/>
+                                        <TextBlock Text=" ˅" FontSize="8" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <Button.ContextMenu>
+                                        <ContextMenu Style="{StaticResource ModernContextMenuStyle}">
+                                            <!-- Details -->
+                                            <MenuItem Header="Details" 
+                                                      Command="{Binding Path=PlacementTarget.Tag.SetViewStyleCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" 
+                                                      CommandParameter="Details"
+                                                      Style="{StaticResource ModernMenuItemStyle}">
+                                                <MenuItem.Icon>
+                                                    <TextBlock Text="&#xE7C1;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Path=PlacementTarget.Tag.ViewStyle, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="Details">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <!-- Grid -->
+                                            <MenuItem Header="Grid" 
+                                                      Command="{Binding Path=PlacementTarget.Tag.SetViewStyleCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" 
+                                                      CommandParameter="Grid"
+                                                      Style="{StaticResource ModernMenuItemStyle}">
+                                                <MenuItem.Icon>
+                                                    <TextBlock Text="&#xE7C1;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Path=PlacementTarget.Tag.ViewStyle, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="Grid">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <!-- List -->
+                                            <MenuItem Header="List" 
+                                                      Command="{Binding Path=PlacementTarget.Tag.SetViewStyleCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" 
+                                                      CommandParameter="List"
+                                                      Style="{StaticResource ModernMenuItemStyle}">
+                                                <MenuItem.Icon>
+                                                    <TextBlock Text="&#xE7C1;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Path=PlacementTarget.Tag.ViewStyle, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="List">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </Button.ContextMenu>
+                                </Button>
+                                
+                                <Button ToolTip="Semantic Search" Command="{Binding ToggleSearchOverlayCommand}">
+                                    <Button.Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource SmallToolbarButton}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsSearchOverlayOpen}" Value="True">
+                                                    <Setter Property="Foreground" Value="{StaticResource PurpleAccentBrush}"/>
+                                                    <Setter Property="FontWeight" Value="Bold"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="11" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <TextBlock Text="Search" FontSize="11" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
                             </StackPanel>
 
                             <!-- Right: Sorting & Refresh -->
                             <StackPanel Grid.Column="2" Orientation="Horizontal">
-                                <Button Content="⇅ Sort" Style="{StaticResource SmallToolbarButton}" FontSize="11" Margin="0,0,12,0"/>
-                                <Button Content="🔄 Refresh" Style="{StaticResource SmallToolbarButton}" FontSize="11"/>
+                                <!-- Sort dropdown instead of static button -->
+                                <Button Style="{StaticResource SmallToolbarButton}" Click="OptionButton_Click" Tag="{Binding DataContext, ElementName=MainWindowInstance}" Margin="0,0,12,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="⇅" FontSize="12" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Sort" FontSize="11" VerticalAlignment="Center"/>
+                                        <TextBlock Text=" ˅" FontSize="8" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <Button.ContextMenu>
+                                        <ContextMenu Style="{StaticResource ModernContextMenuStyle}">
+                                            <!-- Name -->
+                                            <MenuItem Header="Name" 
+                                                      Command="{Binding Path=PlacementTarget.Tag.SortResultsCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" 
+                                                      CommandParameter="Name"
+                                                      Style="{StaticResource ModernMenuItemStyle}">
+                                                <MenuItem.Icon>
+                                                    <TextBlock Text="&#xE7C1;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Path=PlacementTarget.Tag.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="Name">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <!-- Date modified -->
+                                            <MenuItem Header="Date modified" 
+                                                      Command="{Binding Path=PlacementTarget.Tag.SortResultsCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" 
+                                                      CommandParameter="Date modified"
+                                                      Style="{StaticResource ModernMenuItemStyle}">
+                                                <MenuItem.Icon>
+                                                    <TextBlock Text="&#xE7C1;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Path=PlacementTarget.Tag.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="Date modified">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <!-- Type -->
+                                            <MenuItem Header="Type" 
+                                                      Command="{Binding Path=PlacementTarget.Tag.SortResultsCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" 
+                                                      CommandParameter="Type"
+                                                      Style="{StaticResource ModernMenuItemStyle}">
+                                                <MenuItem.Icon>
+                                                    <TextBlock Text="&#xE7C1;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Path=PlacementTarget.Tag.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="Type">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <!-- Size -->
+                                            <MenuItem Header="Size" 
+                                                      Command="{Binding Path=PlacementTarget.Tag.SortResultsCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" 
+                                                      CommandParameter="Size"
+                                                      Style="{StaticResource ModernMenuItemStyle}">
+                                                <MenuItem.Icon>
+                                                    <TextBlock Text="&#xE7C1;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Path=PlacementTarget.Tag.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="Size">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            
+                                            <Separator Background="#2E3245" Margin="0,4"/>
+                                            
+                                            <!-- Ascending -->
+                                            <MenuItem Header="Ascending" 
+                                                      Command="{Binding Path=PlacementTarget.Tag.SetSortDirectionCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" 
+                                                      CommandParameter="{StaticResource TrueValue}"
+                                                      Style="{StaticResource ModernMenuItemStyle}">
+                                                <MenuItem.Icon>
+                                                    <TextBlock Text="&#xE7C1;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Path=PlacementTarget.Tag.IsSortAscending, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="True">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                            <!-- Descending -->
+                                            <MenuItem Header="Descending" 
+                                                      Command="{Binding Path=PlacementTarget.Tag.SetSortDirectionCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" 
+                                                      CommandParameter="{StaticResource FalseValue}"
+                                                      Style="{StaticResource ModernMenuItemStyle}">
+                                                <MenuItem.Icon>
+                                                    <TextBlock Text="&#xE7C1;" FontFamily="Segoe MDL2 Assets" FontSize="12" VerticalAlignment="Center">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Path=PlacementTarget.Tag.IsSortAscending, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="False">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </MenuItem.Icon>
+                                            </MenuItem>
+                                        </ContextMenu>
+                                    </Button.ContextMenu>
+                                </Button>
+                                
+                                <Button Content="🔄 Refresh" Command="{Binding TriggerDeltaScanCommand}" Style="{StaticResource SmallToolbarButton}" FontSize="11"/>
                             </StackPanel>
                         </Grid>
                     </Border>
 
-                    <!-- Row 3: Miller Columns ScrollViewer -->
-                    <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Style="{StaticResource ModernScrollViewer}">
-                        <!-- Horizontal list of Columns -->
+                    <!-- Row 3: Single-panel Active Column View (No Horizontal scroll, stretches completely) -->
+                    <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
+                        <ScrollViewer.Style>
+                            <Style TargetType="ScrollViewer" BasedOn="{StaticResource ModernScrollViewer}">
+                                <Setter Property="Visibility" Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsSearchOverlayOpen}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ScrollViewer.Style>
+                        
+                        <!-- List of Columns (contains exactly 1 column representing active folder) -->
                         <ItemsControl ItemsSource="{Binding Columns}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch"/>
+                                    <Grid/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate DataType="{x:Type viewmodels:DirectoryColumnViewModel}">
-                                    <Border Width="360" BorderBrush="#2E3245" BorderThickness="0,0,1,0" Background="#13141C" VerticalAlignment="Stretch">
+                                    <Border BorderThickness="0" Background="#13141C" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <!-- Column Header Title -->
@@ -1032,87 +1104,52 @@
                                             <!-- Header Title -->
                                             <Border Grid.Row="0" Background="#1A1C29" Padding="12,10" BorderBrush="#2E3245" BorderThickness="0,0,0,1">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="📁" Margin="0,0,6,0" FontSize="12" VerticalAlignment="Center"/>
-                                                    <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                                    <Image Source="{Binding Icon}" Width="16" Height="16" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="6,0,0,0"/>
                                                 </StackPanel>
                                             </Border>
 
-                                            <!-- Column File List -->
+                                            <!-- Column File List (Dynamic view switching using ListBox style datatriggers) -->
                                             <ListBox Grid.Row="1" ItemsSource="{Binding Items}" 
                                                      SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                                                      Background="Transparent" BorderThickness="0"
                                                      ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                                      ItemContainerStyle="{StaticResource ExplorerItemStyle}">
-                                                <ListBox.ItemTemplate>
-                                                    <DataTemplate DataType="{x:Type models:FileItem}">
-                                                        <Grid Margin="0,2">
-                                                            <Grid.InputBindings>
-                                                                <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.OpenFileCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
-                                                            </Grid.InputBindings>
-                                                            <Grid.ColumnDefinitions>
-                                                                <!-- Icon + Name -->
-                                                                <ColumnDefinition Width="*"/>
-                                                                <!-- Extension Tag -->
-                                                                <ColumnDefinition Width="45"/>
-                                                                <!-- Age Badge -->
-                                                                <ColumnDefinition Width="40"/>
-                                                                <!-- Modified -->
-                                                                <ColumnDefinition Width="105"/>
-                                                                <!-- Size -->
-                                                                <ColumnDefinition Width="60"/>
-                                                                <!-- Chevron -->
-                                                                <ColumnDefinition Width="Auto"/>
-                                                            </Grid.ColumnDefinitions>
-
-                                                            <!-- Icon + Name -->
-                                                            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                                                                <TextBlock FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center">
-                                                                    <TextBlock.Style>
-                                                                        <Style TargetType="TextBlock">
-                                                                            <Setter Property="Text" Value="📄" />
-                                                                            <Setter Property="Foreground" Value="{StaticResource CyanAccentBrush}" />
-                                                                            <Style.Triggers>
-                                                                                <DataTrigger Binding="{Binding IsDirectory}" Value="True">
-                                                                                    <Setter Property="Text" Value="📁" />
-                                                                                    <Setter Property="Foreground" Value="#EAB308" />
-                                                                                </DataTrigger>
-                                                                            </Style.Triggers>
-                                                                        </Style>
-                                                                    </TextBlock.Style>
-                                                                </TextBlock>
-                                                                <TextBlock Text="{Binding Name}" FontSize="12" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
-                                                            </StackPanel>
-
-                                                            <!-- Extension -->
-                                                            <TextBlock Grid.Column="1" Text="{Binding ExtensionTag}" FontSize="10.5" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,6,0"/>
-
-                                                            <!-- Age Pill -->
-                                                            <Border Grid.Column="2" CornerRadius="4" Padding="4,2" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{Binding RelativeAgeColor}">
-                                                                <TextBlock Text="{Binding RelativeAge}" FontSize="9.5" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                            </Border>
-
-                                                            <!-- Date Modified -->
-                                                            <TextBlock Grid.Column="3" Text="{Binding Modified, StringFormat={}{0:yyyy-MM-dd HH:mm}}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center" Margin="6,0,0,0"/>
-
-                                                            <!-- Size -->
-                                                            <TextBlock Grid.Column="4" Text="{Binding FormattedSize}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,4,0"/>
-
-                                                            <!-- Chevron -->
-                                                            <TextBlock Grid.Column="5" Text="›" FontSize="13" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" Margin="2,0,2,0" VerticalAlignment="Center">
-                                                                <TextBlock.Style>
-                                                                    <Style TargetType="TextBlock">
-                                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                                        <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding IsDirectory}" Value="True">
-                                                                                <Setter Property="Visibility" Value="Visible"/>
-                                                                            </DataTrigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </TextBlock.Style>
-                                                            </TextBlock>
-                                                        </Grid>
-                                                    </DataTemplate>
-                                                </ListBox.ItemTemplate>
+                                                <ListBox.Style>
+                                                    <Style TargetType="ListBox">
+                                                        <!-- Default details view -->
+                                                        <Setter Property="ItemTemplate" Value="{StaticResource ExplorerDetailsTemplate}"/>
+                                                        <Setter Property="ItemsPanel">
+                                                            <Setter.Value>
+                                                                <ItemsPanelTemplate>
+                                                                    <VirtualizingStackPanel Orientation="Vertical"/>
+                                                                </ItemsPanelTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding DataContext.ViewStyle, RelativeSource={RelativeSource AncestorType=Window}}" Value="Grid">
+                                                                <Setter Property="ItemTemplate" Value="{StaticResource ExplorerGridTemplate}"/>
+                                                                <Setter Property="ItemsPanel">
+                                                                    <Setter.Value>
+                                                                        <ItemsPanelTemplate>
+                                                                            <WrapPanel Orientation="Horizontal" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ListBox}}"/>
+                                                                        </ItemsPanelTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding DataContext.ViewStyle, RelativeSource={RelativeSource AncestorType=Window}}" Value="List">
+                                                                <Setter Property="ItemTemplate" Value="{StaticResource ExplorerListTemplate}"/>
+                                                                <Setter Property="ItemsPanel">
+                                                                    <Setter.Value>
+                                                                        <ItemsPanelTemplate>
+                                                                            <VirtualizingStackPanel Orientation="Vertical"/>
+                                                                        </ItemsPanelTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </ListBox.Style>
                                             </ListBox>
                                         </Grid>
                                     </Border>
@@ -1120,196 +1157,393 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </ScrollViewer>
-                </Grid>
-            </Grid>
 
-            <!-- GLOBAL FILE PREVIEW PANE (COLUMN 2) -->
-            <Border Grid.Column="2" Background="#161822" BorderBrush="#2E3245" BorderThickness="1,0,0,0" VerticalAlignment="Stretch">
-                <Grid>
-                    <!-- Null State Panel (Visible when SelectedFileItem is null) -->
-                    <Grid x:Name="NullStatePreview" Margin="30">
+                    <!-- Row 3: Search Overlay Panel -->
+                    <Grid Grid.Row="3" Margin="0,0,10,0">
                         <Grid.Style>
                             <Style TargetType="Grid">
                                 <Setter Property="Visibility" Value="Collapsed"/>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding SelectedFileItem}" Value="{x:Null}">
+                                    <DataTrigger Binding="{Binding IsSearchOverlayOpen}" Value="True">
                                         <Setter Property="Visibility" Value="Visible"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </Grid.Style>
                         
-                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <TextBlock Text="🔍" FontSize="48" Margin="0,0,0,15" HorizontalAlignment="Center" Foreground="{StaticResource TextMutedBrush}"/>
-                            <TextBlock Text="No Selection" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,5,0"/>
-                            <TextBlock Text="Select a search result or file in the columns to preview contents." 
-                                       FontSize="12" HorizontalAlignment="Center" TextAlignment="Center" 
-                                       Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
-                        </StackPanel>
-                    </Grid>
-
-                    <!-- Active File Details & Preview Panel (Visible when SelectedFileItem is NOT null) -->
-                    <Grid x:Name="ActivePreview" Margin="20">
-                        <Grid.Style>
-                            <Style TargetType="Grid">
-                                <Setter Property="Visibility" Value="Visible"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding SelectedFileItem}" Value="{x:Null}">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Grid.Style>
-                        
                         <Grid.RowDefinitions>
-                            <!-- Metadata Header -->
+                            <!-- Search Input Row -->
                             <RowDefinition Height="Auto"/>
-                            <!-- Action Buttons -->
+                            <!-- Header Filter Bar Row -->
                             <RowDefinition Height="Auto"/>
-                            <!-- Divider -->
-                            <RowDefinition Height="Auto"/>
-                            <!-- Text Content Preview -->
+                            <!-- Results List Row -->
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <!-- Header Metadata (OneCommander Visual Layout) -->
-                        <StackPanel Grid.Row="0" Margin="0,0,0,15">
-                            <!-- Massive Visual Preview Card -->
-                            <Border Background="#1C1E2B" BorderBrush="#2E3245" BorderThickness="1" CornerRadius="12" Height="140" Margin="0,0,0,15" SnapsToDevicePixels="True">
-                                <Grid>
-                                    <!-- Giant Icon representation based on Type -->
-                                    <TextBlock FontSize="64" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Text" Value="📄" />
-                                                <Setter Property="Foreground" Value="{StaticResource CyanAccentBrush}" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding SelectedFileItem.FileType}" Value="Folder">
-                                                        <Setter Property="Text" Value="📁" />
-                                                        <Setter Property="Foreground" Value="#EAB308" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding SelectedFileItem.ExtensionTag}" Value="png">
-                                                        <Setter Property="Text" Value="🖼️" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding SelectedFileItem.ExtensionTag}" Value="jpg">
-                                                        <Setter Property="Text" Value="🖼️" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding SelectedFileItem.ExtensionTag}" Value="jpeg">
-                                                        <Setter Property="Text" Value="🖼️" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding SelectedFileItem.ExtensionTag}" Value="gif">
-                                                        <Setter Property="Text" Value="🖼️" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding SelectedFileItem.ExtensionTag}" Value="pdf">
-                                                        <Setter Property="Text" Value="📕" />
-                                                        <Setter Property="Foreground" Value="#EF4444" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding SelectedFileItem.ExtensionTag}" Value="docx">
-                                                        <Setter Property="Text" Value="📘" />
-                                                        <Setter Property="Foreground" Value="#3B82F6" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding SelectedFileItem.ExtensionTag}" Value="doc">
-                                                        <Setter Property="Text" Value="📘" />
-                                                        <Setter Property="Foreground" Value="#3B82F6" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding SelectedFileItem.ExtensionTag}" Value="xlsx">
-                                                        <Setter Property="Text" Value="📗" />
-                                                        <Setter Property="Foreground" Value="#10B981" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </Grid>
-                            </Border>
+                        <!-- Search Inputs -->
+                        <Grid Grid.Row="0" Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <TextBox Grid.Column="0" Height="42" 
+                                     Text="{Binding SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource ModernTextBox}"
+                                     Tag="Search files by meaning or filename...">
+                                <TextBox.InputBindings>
+                                    <KeyBinding Key="Return" Command="{Binding PerformSearchCommand}"/>
+                                </TextBox.InputBindings>
+                            </TextBox>
+                            
+                            <Button Grid.Column="1" Content="Search" Width="100" Height="42" Margin="10,0,0,0" 
+                                    Command="{Binding PerformSearchCommand}" Style="{StaticResource AccentButton}"/>
+                            
+                            <Button Grid.Column="2" Content="Clear" Width="80" Height="42" Margin="10,0,0,0" 
+                                    Command="{Binding ClearSearchCommand}" Style="{StaticResource ModernButton}"/>
+                            
+                            <Button Grid.Column="3" ToolTip="Close Search" Command="{Binding CloseSearchOverlayCommand}" Width="42" Height="42" Margin="10,0,0,0" Style="{StaticResource ModernButton}">
+                                <TextBlock Text="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Button>
+                        </Grid>
 
-                            <!-- Filename Title -->
-                            <TextBlock Text="{Binding SelectedFileItem.FileName}" FontSize="15" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" TextWrapping="Wrap" Margin="0,0,0,12"/>
-                            
-                            <!-- Properties list -->
-                            <Grid Margin="0,4,0,0">
+                        <!-- Sort Filter Header Bar -->
+                        <Border Grid.Row="1" Background="#161822" BorderBrush="#2E3245" BorderThickness="1" CornerRadius="6" Padding="15,8" Margin="0,0,0,10">
+                            <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="85"/>
-                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="Name" FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
-                                <TextBlock Grid.Column="1" Text="{Binding SelectedFileItem.FileName}" FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
-                            </Grid>
-                            
-                            <Grid Margin="0,4,0,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="85"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="Type" FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
-                                <TextBlock Grid.Column="1" Text="{Binding SelectedFileItem.ExtensionTag}" FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}"/>
-                            </Grid>
-                            
-                            <Grid Margin="0,4,0,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="85"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="Modified" FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
-                                <TextBlock Grid.Column="1" Text="{Binding SelectedFileItem.Modified, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}"/>
-                            </Grid>
-                            
-                            <Grid Margin="0,4,0,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="85"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="Age" FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
-                                <TextBlock Grid.Column="1" Text="{Binding SelectedFileItem.RelativeAge}" FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}"/>
-                            </Grid>
 
-                            <Grid Margin="0,4,0,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="85"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="Size" FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
-                                <TextBlock Grid.Column="1" Text="{Binding SelectedFileItem.FormattedSize}" FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}"/>
-                            </Grid>
-                            
-                            <Grid Margin="0,4,0,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="85"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="Full Path" FontSize="11.5" Foreground="{StaticResource TextMutedBrush}"/>
-                                <TextBlock Grid.Column="1" Text="{Binding SelectedFileItem.FilePath}" FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
-                            </Grid>
-                        </StackPanel>
+                                <!-- Name Sort Trigger -->
+                                <Button Grid.Column="0" Command="{Binding SortResultsCommand}" CommandParameter="Name" Style="{StaticResource SortHeaderButtonStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Name" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                        <TextBlock Text="  ▲" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource CyanAccentBrush}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Name"/>
+                                                                <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="True"/>
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                        <TextBlock Text="  ▼" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Name"/>
+                                                                <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="False"/>
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Button>
 
-                        <!-- Action Buttons -->
-                        <UniformGrid Grid.Row="1" Rows="1" Columns="3" Margin="0,0,0,15">
-                            <Button Content="Open File" Command="{Binding OpenFileCommand}" Style="{StaticResource ModernButton}" Margin="0,0,4,0" Padding="4,8"/>
-                            <Button Content="Open Folder" Command="{Binding OpenFolderCommand}" Style="{StaticResource ModernButton}" Margin="2,0,2,0" Padding="4,8"/>
-                            <Button Content="Copy Path" Command="{Binding CopyPathCommand}" Style="{StaticResource ModernButton}" Margin="4,0,0,0" Padding="4,8"/>
-                        </UniformGrid>
+                                <!-- Date Modified Sort Trigger -->
+                                <Button Grid.Column="1" Command="{Binding SortResultsCommand}" CommandParameter="Date modified" Style="{StaticResource SortHeaderButtonStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Date modified" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                        <TextBlock Text="  ▲" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource CyanAccentBrush}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Date modified"/>
+                                                                <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="True"/>
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                        <TextBlock Text="  ▼" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource CyanAccentBrush}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Date modified"/>
+                                                                <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="False"/>
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Button>
 
-                        <!-- Divider -->
-                        <Border Grid.Row="2" BorderBrush="#2E3245" BorderThickness="0,0,0,1" Margin="0,0,0,15">
-                            <Border.Style>
-                                <Style TargetType="Border">
-                                    <Setter Property="Visibility" Value="Visible"/>
+                                <!-- Type Sort Trigger -->
+                                <Button Grid.Column="2" Command="{Binding SortResultsCommand}" CommandParameter="Type" Style="{StaticResource SortHeaderButtonStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Type" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                        <TextBlock Text="  ▲" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource CyanAccentBrush}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Type"/>
+                                                                <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="True"/>
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                        <TextBlock Text="  ▼" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource CyanAccentBrush}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Type"/>
+                                                                <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="False"/>
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Button>
+
+                                <!-- Size Sort Trigger -->
+                                <Button Grid.Column="3" Command="{Binding SortResultsCommand}" CommandParameter="Size" Style="{StaticResource SortHeaderButtonStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Size" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                        <TextBlock Text="  ▲" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource CyanAccentBrush}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Size"/>
+                                                                <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="True"/>
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                        <TextBlock Text="  ▼" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource CyanAccentBrush}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Size"/>
+                                                                <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="False"/>
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Button>
+
+                                <!-- Score Sort Trigger -->
+                                <Button Grid.Column="4" Command="{Binding SortResultsCommand}" CommandParameter="Score" Style="{StaticResource SortHeaderButtonStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Score" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                        <TextBlock Text="  ▲" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource CyanAccentBrush}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Score"/>
+                                                                <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="True"/>
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                        <TextBlock Text="  ▼" FontSize="9" VerticalAlignment="Center" Foreground="{StaticResource CyanAccentBrush}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding DataContext.CurrentSortColumn, RelativeSource={RelativeSource AncestorType=Window}}" Value="Score"/>
+                                                                <Condition Binding="{Binding DataContext.IsSortAscending, RelativeSource={RelativeSource AncestorType=Window}}" Value="False"/>
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                        </Border>
+
+                        <!-- Search Results Cards -->
+                        <ListBox Grid.Row="2" ItemsSource="{Binding SearchResults}" 
+                                 SelectedItem="{Binding SelectedSearchResult, Mode=TwoWay}"
+                                 Background="Transparent" BorderThickness="0" 
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 ItemContainerStyle="{StaticResource SearchResultItemStyle}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate DataType="{x:Type models:SearchResult}">
+                                    <Grid>
+                                        <Grid.InputBindings>
+                                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.OpenFileCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                        </Grid.InputBindings>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <!-- Row 1: File Name + Extension Badge -->
+                                        <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
+                                            <Image Source="{Binding Icon}" Width="16" Height="16" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding FileName}" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+
+                                        <!-- Match Type Badge -->
+                                        <Border Grid.Column="1" Grid.Row="0" CornerRadius="4" Padding="6,2" VerticalAlignment="Center">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Background" Value="#2E3245" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding SearchType}" Value="Semantic">
+                                                            <Setter Property="Background" Value="#002D33" />
+                                                            <Setter Property="BorderBrush" Value="#00F2FE" />
+                                                            <Setter Property="BorderThickness" Value="1" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding SearchType}" Value="Hybrid">
+                                                            <Setter Property="Background" Value="#250F3A" />
+                                                            <Setter Property="BorderBrush" Value="#7F00FF" />
+                                                            <Setter Property="BorderThickness" Value="1" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <TextBlock FontSize="10" FontWeight="Bold">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Text" Value="Keyword" />
+                                                        <Setter Property="Foreground" Value="#9499B0" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding SearchType}" Value="Semantic">
+                                                                <Setter Property="Text" Value="Semantic" />
+                                                                <Setter Property="Foreground" Value="#00F2FE" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding SearchType}" Value="Hybrid">
+                                                                <Setter Property="Text" Value="Hybrid" />
+                                                                <Setter Property="Foreground" Value="#D8B4FE" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </Border>
+
+                                        <!-- Row 2: File Path -->
+                                        <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" 
+                                                   Text="{Binding FilePath}" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" 
+                                                   Margin="24,4,0,4" TextTrimming="CharacterEllipsis"/>
+
+                                        <!-- Row 3: Size & Date Details -->
+                                        <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Orientation="Horizontal" Margin="24,2,0,0">
+                                            <TextBlock Text="Size: " FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
+                                            <TextBlock Text="{Binding FormattedSize}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,15,0"/>
+                                            
+                                            <TextBlock Text="Modified: " FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
+                                            <TextBlock Text="{Binding Modified, StringFormat={}{0:yyyy-MM-dd HH:mm}}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,15,0"/>
+
+                                            <TextBlock Text="Score: " FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
+                                            <TextBlock Text="{Binding RelevanceScore, StringFormat={}{0:F2}}" FontSize="11" Foreground="{StaticResource CyanAccentBrush}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </Grid>
+            </Grid>
+
+            <!-- GLOBAL PREVIEW PANE INSPECTOR (COLUMN 2) -->
+            <Border Grid.Column="2" Background="#111216" BorderBrush="#2E3245" BorderThickness="1,0,0,0" VerticalAlignment="Stretch">
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Preview" FontSize="14" FontWeight="Bold" Foreground="#4F567A" Margin="0,0,0,15"/>
+
+                    <Grid Grid.Row="1">
+                        <!-- Null State (No selection) -->
+                        <Grid>
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsSelectedFileText}" Value="False">
-                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        <DataTrigger Binding="{Binding SelectedFileItem}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Visible"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </Border.Style>
-                        </Border>
+                            </Grid.Style>
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" FontSize="48" Foreground="#2E3245" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                                <TextBlock Text="Select a file to preview its details" FontSize="12.5" Foreground="{StaticResource TextMutedBrush}" TextAlignment="Center" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Grid>
 
-                        <!-- Text Preview Content -->
-                        <Grid Grid.Row="3">
+                        <!-- Selected state content card -->
+                        <Grid>
                             <Grid.Style>
                                 <Style TargetType="Grid">
                                     <Setter Property="Visibility" Value="Visible"/>
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsSelectedFileText}" Value="False">
+                                        <DataTrigger Binding="{Binding SelectedFileItem}" Value="{x:Null}">
                                             <Setter Property="Visibility" Value="Collapsed"/>
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -1319,57 +1553,141 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0" Text="CONTENT PREVIEW (First 100 lines)" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,8"/>
-                            
-                            <!-- Read-only Text Box preview -->
-                            <TextBox Grid.Row="1" Text="{Binding SelectedFileContentPreview}" 
-                                     IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap"
-                                     Background="#0C0D11" Foreground="#A9B2C3" 
-                                     BorderBrush="#2E3245" BorderThickness="1"
-                                     FontFamily="Consolas, Courier New" FontSize="11" 
-                                     Padding="10" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                                <TextBox.Style>
-                                    <Style TargetType="TextBox">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsFilePreviewLoading}" Value="True">
-                                                <Setter Property="Opacity" Value="0.4"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBox.Style>
-                            </TextBox>
-                            
-                            <!-- Loading Text Overlay -->
-                            <TextBlock Grid.Row="1" Text="Loading content preview..." FontSize="12" Foreground="{StaticResource CyanAccentBrush}" 
-                                       HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsFilePreviewLoading}" Value="True">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
+                            <!-- File visual summary card -->
+                            <Border Grid.Row="0" Background="#161822" BorderBrush="#2E3245" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Grid.Column="0" Source="{Binding SelectedFileItem.LargeIcon}" Width="32" Height="32" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding SelectedFileItem.FileName}" FontSize="13.5" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Text="{Binding SelectedFileItem.ExtensionTag}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!-- Properties & Text preview -->
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Style="{StaticResource ModernScrollViewer}" Margin="0,0,0,15">
+                                <StackPanel>
+                                    <!-- Properties list -->
+                                    <TextBlock Text="Properties" FontSize="11" FontWeight="Bold" Foreground="#4F567A" Margin="0,0,0,10"/>
+                                    
+                                    <Grid Margin="0,4,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="Name" FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding SelectedFileItem.FileName}" FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                                    </Grid>
+                                    <Grid Margin="0,6,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="Type" FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding SelectedFileItem.FileType}" FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    </Grid>
+                                    <Grid Margin="0,6,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="Size" FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding SelectedFileItem.FormattedSize}" FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    </Grid>
+                                    <Grid Margin="0,6,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="Modified" FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding SelectedFileItem.Modified, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" FontSize="11.5" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    </Grid>
+                                    <Grid Margin="0,6,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="Score" FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding SelectedFileItem.RelevanceScore, StringFormat={}{0:F2}}" FontSize="11.5" Foreground="{StaticResource CyanAccentBrush}"/>
+                                    </Grid>
+                                    <Grid Margin="0,6,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="Location" FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding SelectedFileItem.FilePath}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                                    </Grid>
+
+                                    <!-- Content Preview -->
+                                    <StackPanel Margin="0,20,0,0">
+                                        <StackPanel.Style>
+                                            <Style TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsSelectedFileText}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </StackPanel.Style>
+                                        
+                                        <TextBlock Text="Content Preview" FontSize="11" FontWeight="Bold" Foreground="#4F567A" Margin="0,0,0,10"/>
+                                        <Border Background="#0C0D11" BorderBrush="#2E3245" BorderThickness="1" CornerRadius="6" Padding="10">
+                                            <TextBox Text="{Binding SelectedFileContentPreview, Mode=OneWay}" 
+                                                     Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextPrimaryBrush}"
+                                                     FontSize="11.5" FontFamily="Consolas" TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True" Height="250"/>
+                                        </Border>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ScrollViewer>
+
+                            <!-- Actions bar -->
+                            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Stretch" Height="36">
+                                <Button Content="Open File" Command="{Binding OpenFileCommand}" Style="{StaticResource ModernButton}" HorizontalAlignment="Left" Width="95" Margin="0,0,10,0"/>
+                                <Button Content="Open Folder" Command="{Binding OpenFolderCommand}" Style="{StaticResource ModernButton}" HorizontalAlignment="Left" Width="95" Margin="0,0,10,0"/>
+                                <Button Content="Copy Path" Command="{Binding CopyPathCommand}" Style="{StaticResource ModernButton}" HorizontalAlignment="Left" Width="80"/>
+                            </StackPanel>
+                        </Grid>
+                        
+                        <!-- Preview Loading Spinner overlay -->
+                        <Grid Background="#7F111216" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsFilePreviewLoading}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+                            <TextBlock Text="&#xE712;" FontFamily="Segoe MDL2 Assets" FontSize="36" Foreground="{StaticResource CyanAccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Grid>
                     </Grid>
                 </Grid>
             </Border>
         </Grid>
 
-        <!-- Bottom Footer -->
-        <Border Grid.Row="2" Background="#161822" BorderBrush="#2E3245" BorderThickness="0,1,0,0" Padding="15,8">
+        <!-- Bottom Footer (Row 2) -->
+        <Border Grid.Row="2" Background="#161822" BorderBrush="#2E3245" BorderThickness="0,1,0,0" Padding="20,8">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding StatusMessage}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
-                <TextBlock Grid.Column="1" Text="Phase 5: Miller Columns &amp; Theme Complete" FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
+                <TextBlock Grid.Column="0" Text="{Binding StatusMessage}" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="AI Index: ready" FontSize="11" Foreground="{StaticResource SuccessBrush}" Margin="0,0,15,0"/>
+                    <TextBlock Text="all-MiniLM-L6-v2" FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
+                </StackPanel>
             </Grid>
         </Border>
     </Grid>

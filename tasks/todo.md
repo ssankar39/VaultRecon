@@ -70,18 +70,82 @@ The entire GUI layout has been transformed to match the OneCommander screenshot:
 - **Preview Inspector**: Renders glassmorphic colored cards with descriptive details list keys.
 
 # Todo List: Consistent Button Hover Style
-- [ ] Define the consistent gray hover color resource `HoverGrayBrush` in `App.xaml`
-- [ ] Refactor `ModernButton` style in `App.xaml` to hover with the consistent gray background and border
-- [ ] Refactor `AccentButton` style in `App.xaml` to hover with the consistent gray background
-- [ ] Refactor `SidebarButtonStyle` in `MainWindow.xaml` to hover with the consistent gray background
-- [ ] Refactor `SortHeaderButtonStyle` in `MainWindow.xaml` to hover with the consistent gray background
-- [ ] Refactor `TabHeaderButton` in `MainWindow.xaml` to hover with a subtle consistent gray background
-- [ ] Create a reusable `SmallToolbarButton` style in `MainWindow.xaml` with consistent gray hover
-- [ ] Apply `SmallToolbarButton` style to all small buttons in `MainWindow.xaml`:
-    - Navigation toolbar buttons (←, →, ↑, ⌂)
-    - View style toolbar buttons (≡ List, ⊞ Grid, 📊 Columns)
-    - Sorting & Refresh buttons (⇅ Sort, 🔄 Refresh)
-    - Sidebar mini-toolbar buttons (ℹ️, ⚙️, 🔍, 🔄)
-    - Context Menu action bar buttons (Cut, Copy, Rename, Share, Delete)
-- [ ] Apply style/hovering to the "New group" sidebar button
-- [ ] Build and launch the app, manually verifying all button hover interactions
+- [x] Define the consistent gray hover color resource `HoverGrayBrush` in `App.xaml`
+- [x] Refactor `ModernButton` style in `App.xaml` to hover with the consistent gray background and border
+- [x] Refactor `AccentButton` style in `App.xaml` to hover with the consistent gray background
+- [x] Refactor `SidebarButtonStyle` in `MainWindow.xaml` to hover with the consistent gray background
+- [x] Refactor `SortHeaderButtonStyle` in `MainWindow.xaml` to hover with the consistent gray background
+- [x] Refactor `TabHeaderButton` in `MainWindow.xaml` to hover with a subtle consistent gray background
+- [x] Create a reusable `SmallToolbarButton` style in `MainWindow.xaml` with consistent gray hover
+- [x] Apply `SmallToolbarButton` style to all small buttons in `MainWindow.xaml`:
+    - [x] Navigation toolbar buttons (←, →, ↑, ⌂)
+    - [x] View style toolbar buttons (≡ List, ⊞ Grid, 📊 Columns)
+    - [x] Sorting & Refresh buttons (⇅ Sort, 🔄 Refresh)
+    - [x] Sidebar mini-toolbar buttons (ℹ️, ⚙️, 🔍, 🔄)
+    - [x] Context Menu action bar buttons (Cut, Copy, Rename, Share, Delete)
+- [x] Apply style/hovering to the "New group" sidebar button
+- [x] Build and launch the app, manually verifying all button hover interactions
+
+# Todo List: Interactive Sidebar & Explorer Column Controls
+- [x] Implement C: Drive Disk Capacity Diagnostics (`UpdateDriveSpaceDetails`) in `SearchViewModel.cs`
+- [x] Create generalised `NavigateToFolderCommand` supporting sequential path hierarchy column building
+- [x] Implement Navigation Back/Forward stacks and `CanNavigateBack`/`CanNavigateForward` triggers
+- [x] Implement dynamic navigation history collection (`HistoryItems`) on folder selection changes
+- [x] Add about dialog, settings diagnostics, and delta scan commands to VM
+- [x] Bind Main Disk button to NavigateToFolder with C:\ and dynamic space parameters in XAML
+- [x] Bind Navigation Arrows (←, →, ↑, ⌂) to their respective commands and enablement states in XAML
+- [x] Bind Dynamic History list to Sidebar ItemsControl in XAML
+- [x] Bind bottom Sidebar mini-toolbar buttons to their respective commands in XAML
+- [x] Perform manual verification of the entire interactive explorer pipeline
+
+# Todo List: Dynamic Shell Icons & Emoji Removal
+- [x] Add `LargeIcon` property to `FileItem.cs`
+- [x] Add `LargeIcon` property to `SearchResult.cs`
+- [x] Add `Icon` property to `DirectoryColumnViewModel.cs`
+- [x] Implement `InitializeSidebarIcons` and register it in `SearchViewModel.cs` constructor
+- [x] Update `MainWindow.xaml` to bind Drives, Sidebar directories, and History to their dynamic system icons
+- [x] Update `MainWindow.xaml` search results card to display native system icons
+- [x] Update `MainWindow.xaml` Explorer column headers and items to display dynamic icons
+- [x] Update `MainWindow.xaml` Preview pane (Null state & Active preview card) with Segoe MDL2 icon and LargeIcon dynamic image
+- [x] Refactor ContextMenu and bottom mini-toolbar in `MainWindow.xaml` to use Segoe MDL2 Assets instead of emojis
+- [x] Build and verify compilation and visual fidelity
+
+# Todo List: Explorer Search Overlay & Tab Removal
+- [x] Add `isSearchOverlayOpen` property, `ToggleSearchOverlayCommand`, and `CloseSearchOverlayCommand` to `SearchViewModel.cs`
+- [x] Remove navigation tabs StackPanel from `MainWindow.xaml` header
+- [x] Add `🔍 Search` button in `MainWindow.xaml` File Explorer toolbar
+- [x] Integrate Search Overlay Grid containing the search bar and cards into Row 3 of Explorer panel in `MainWindow.xaml`
+- [x] Bind Miller Columns ScrollViewer and Search Overlay Grid visibility states to `IsSearchOverlayOpen`
+- [x] Build and verify compilation and visual layout
+
+# Todo List: Dynamic Breadcrumbs Address Bar & Customizable Sidebar (Milestone 5+)
+- [x] Implement clickable breadcrumbs address bar matching Windows Explorer layout
+- [x] Implement editable TextBox path toggle on click/focus with Return/Esc bindings
+- [x] Implement customizable sidebar shortcut groups to replace static quick access
+- [x] Implement "Pin to Quick Access" context menu option on folder items to bookmark them
+- [x] Implement dynamic "New group" sidebar button
+- [x] Implement header controls (+ and ...) to add shortcuts and manage sidebar groups
+- [x] Remove write assignments to read-only FileItem.Icon property
+- [x] Rebuild and verify compilation success with 0 errors
+
+# Todo List: Group Management, Single-Panel Navigation & Windows-Style Sort/View Toolbars
+- [x] Add `OptionButton_Click` event handler in `MainWindow.xaml.cs` to trigger ContextMenus on left-click
+- [x] Fix WPF ContextMenu scope disconnect for Sidebar groups ("Rename Group", "Delete Group") using `PlacementTarget.Tag` and `PlacementTarget.DataContext`
+- [x] Fix WPF ContextMenu scope disconnect for group shortcuts ("Remove from Sidebar")
+- [x] Remove `Width="360"` from Column Border and set Column list ItemsControl panel to `<Grid/>` for single-panel stretching
+- [x] Disable outer ScrollViewer horizontal scrollbar to match single-panel Windows Explorer mode
+- [x] Update ListBox double-click mouse binding to trigger `OpenFileFromItemCommand` with `CommandParameter="{Binding}"` for folder entering and native file launch
+- [x] Replace static `⇅ Sort` button with clickable Windows 11-style sorting dropdown ContextMenu
+- [x] Replace static layout buttons with clickable `View` dropdown ContextMenu supporting details, grid, and list views
+- [x] Add `ExplorerDetailsTemplate`, `ExplorerGridTemplate`, and `ExplorerListTemplate` in `Window.Resources`
+- [x] Wire up dynamic template and layout switching inside Column ListBox based on `ViewStyle` using DataTriggers
+- [x] Build and verify successful compilation and flawless execution
+# Todo List: Group Management, Active Directory Pane & Toolbar Fixes (Milestone 5+ / User Feedback Round 2)
+- [x] Add `x:Name="MainWindowInstance"` to the `<Window>` in `MainWindow.xaml` to establish a stable named namescope.
+- [x] Replace `Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}"` with `Tag="{Binding DataContext, ElementName=MainWindowInstance}"` on options button (line 565), shortcut button (line 598), View button (line 839), and Sort button (line 932) to resolve initial null evaluation.
+- [x] Verify that right-click context menu bindings in `Windows11Menu` and sidebar groups resolve and execute perfectly.
+- [x] Verify that sorting and view switching dropdown menus (Details, Grid, List) now function perfectly when left-clicked and selected.
+- [x] Verify that sidebar groups renaming via input popups and shortcut removal function perfectly.
+- [x] Ensure single-column stretched active folder layout matches the behavior of Windows Explorer.
+- [x] Auto-close search overlay (`IsSearchOverlayOpen = false`) upon any navigation command in `SearchViewModel.cs` (inside `NavigateToFolderAsync` and `LoadInitialColumnsAsync`), so the user returns to the File Explorer when selecting sidebar drives, folders, history, breadcrumbs, parent folders, or double-clicking search results.
+

@@ -72,6 +72,9 @@ namespace BetterFileSys.Models
             }
         }
 
+        public System.Windows.Media.ImageSource? Icon => BetterFileSys.Services.ShellIconHelper.GetIconForPath(Path);
+        public System.Windows.Media.ImageSource? LargeIcon => BetterFileSys.Services.ShellIconHelper.GetIconForPath(Path, large: true);
+
         public override string ToString() => Name;
     }
 }
