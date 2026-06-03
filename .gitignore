@@ -39,7 +39,7 @@ Thumbs.db
 temp/
 
 # Debug logs
-BetterFileSys_Debug.log
+VaultRecon_Debug.log
 *.log
 
 # Local environment
