@@ -17,7 +17,7 @@ namespace BetterFileSys.Services
         private const string TableName = "files";
 
         private readonly string _dbPath;
-        private readonly string _logPath = Path.Combine(Path.GetTempPath(), "BetterFileSys_Debug.log");
+        private readonly string _logPath = Path.Combine(Path.GetTempPath(), "VaultRecon_Debug.log");
         private Connection? _connection;
         private LanceTable? _table;
         private Schema? _schema;

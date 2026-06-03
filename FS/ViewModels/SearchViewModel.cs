@@ -22,7 +22,7 @@ namespace BetterFileSys.ViewModels
         private readonly LanceDbIndexService _indexService;
         private readonly BackgroundIndexService _backgroundIndexService;
         private readonly FileSystemService _fileSystemService = new();
-        private readonly string _logPath = Path.Combine(Path.GetTempPath(), "BetterFileSys_Debug.log");
+        private readonly string _logPath = Path.Combine(Path.GetTempPath(), "VaultRecon_Debug.log");
 
         private void Log(string message)
         {
@@ -1505,7 +1505,7 @@ namespace BetterFileSys.ViewModels
         private static string GetIndexPath()
         {
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            return Path.Combine(appData, "BetterFileSys", "index");
+            return Path.Combine(appData, "VaultRecon", "index");
         }
 
         private static string[] GetRootPaths()

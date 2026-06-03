@@ -17,7 +17,7 @@ namespace BetterFileSys.Services
     /// </summary>
     public class EverythingService
     {
-        private readonly string _logPath = Path.Combine(Path.GetTempPath(), "BetterFileSys_Debug.log");
+        private readonly string _logPath = Path.Combine(Path.GetTempPath(), "VaultRecon_Debug.log");
 
         private void Log(string message)
         {

@@ -16,7 +16,7 @@ namespace BetterFileSys.Services
     /// </summary>
     public class EmbeddingService : IDisposable
     {
-        private readonly string _logPath = Path.Combine(Path.GetTempPath(), "BetterFileSys_Debug.log");
+        private readonly string _logPath = Path.Combine(Path.GetTempPath(), "VaultRecon_Debug.log");
         private InferenceSession? _session;
         private BertTokenizer? _tokenizer;
         private bool _isInitialized = false;
@@ -357,7 +357,7 @@ namespace BetterFileSys.Services
         {
             string appDataPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "BetterFileSys",
+                "VaultRecon",
                 "models"
             );
 
@@ -371,7 +371,7 @@ namespace BetterFileSys.Services
         {
             string appDataPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "BetterFileSys",
+                "VaultRecon",
                 "models"
             );
 

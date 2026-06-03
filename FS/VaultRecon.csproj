@@ -6,11 +6,22 @@
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
-    <AssemblyName>BetterFileSys</AssemblyName>
+    <AssemblyName>VaultRecon</AssemblyName>
     <RootNamespace>BetterFileSys</RootNamespace>
     <Version>1.0.0</Version>
-    <Description>Advanced file system manager with semantic search and Everything SDK integration</Description>
-    <Authors>Better FileSys Team</Authors>
+    <Description>Advanced local file manager and semantic search engine</Description>
+    <Authors>VaultRecon Team</Authors>
+    <Product>VaultRecon</Product>
+    <Company>VaultRecon</Company>
+    <Copyright>Copyright © 2026 VaultRecon Team</Copyright>
+    <ApplicationIcon>app_icon.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <Optimize>true</Optimize>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,6 +47,12 @@
     
     <!-- ONNX Runtime for embeddings (all-MiniLM-L6-v2) -->
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.17.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="scripts\parse_document.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

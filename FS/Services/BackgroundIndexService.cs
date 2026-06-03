@@ -28,7 +28,7 @@ namespace BetterFileSys.Services
         private readonly ConcurrentDictionary<string, PendingEvent> _pendingEvents = new(StringComparer.OrdinalIgnoreCase);
         private readonly AutoResetEvent _queueSignal = new(false);
         private readonly ManualResetEventSlim _pauseGate = new(true);
-        private readonly string _logPath = Path.Combine(Path.GetTempPath(), "BetterFileSys_Debug.log");
+        private readonly string _logPath = Path.Combine(Path.GetTempPath(), "VaultRecon_Debug.log");
         private readonly string[] _rootPaths;
 
         private Thread? _workerThread;
